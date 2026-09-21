@@ -1,0 +1,1433 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Research Internship Management · Administrative Portal</title>
+<style>
+:root{
+ --bg:#f6f8fb;--card:#fff;--ink:#182230;--muted:#667085;--line:#e4e7ec;
+ --blue:#2f75b5;--blue2:#175cd3;--blueSoft:#eef6fd;
+ --green:#067647;--greenSoft:#ecfdf3;--amber:#b54708;--amberSoft:#fffaeb;
+ --red:#b42318;--redSoft:#fef3f2;--violet:#6941c6;--violetSoft:#f4f3ff;
+ --gray:#344054;--graySoft:#f2f4f7;--shadow:0 7px 22px rgba(16,24,40,.07)
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--ink)}
+button,input,select{font:inherit} button{cursor:pointer}
+.shell{max-width:1600px;margin:auto;padding:17px}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:13px}
+.brand{display:flex;gap:11px;align-items:center}.logo{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#2f75b5,#69aee0);display:grid;place-items:center;color:#fff;font-weight:900}
+h1{font-size:23px;margin:0}.sub{font-size:11px;color:var(--muted);margin-top:4px}
+.demo{padding:7px 10px;border:1px solid #fedf89;border-radius:999px;background:#fffaeb;color:#93370d;font-size:10px;font-weight:800}
+.toolbar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 11px;font-size:11px;color:#344054}.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:800}.btn.soft{background:var(--blueSoft);border-color:#cfe7fa;color:var(--blue2)}.btn.amber{background:var(--amberSoft);border-color:#fedf89;color:#93370d}
+.segment{display:flex;gap:6px;padding:5px;background:#eef2f6;border-radius:9px;width:max-content;margin-bottom:12px}.seg{border:0;background:transparent;border-radius:7px;padding:8px 12px;font-size:11px;font-weight:700;color:#475467}.seg.active{background:#fff;color:var(--blue2);box-shadow:0 1px 4px rgba(16,24,40,.10)}
+.reminder{display:flex;justify-content:space-between;gap:12px;align-items:center;background:#fff;border:1px solid var(--line);border-left:5px solid var(--amber);border-radius:10px;padding:10px 12px;margin-bottom:12px;box-shadow:var(--shadow)}
+.reminder .title{font-size:12px;font-weight:800}.reminder .txt{font-size:10px;color:var(--muted);margin-top:3px}.reminder .count{font-size:22px;font-weight:900;color:var(--amber)}
+.kpis{display:grid;grid-template-columns:repeat(6,minmax(110px,1fr));gap:8px;margin-bottom:12px}.kpi{background:#fff;border:1px solid var(--line);border-radius:10px;padding:11px;box-shadow:var(--shadow)}.kpi .k{font-size:9.5px;color:var(--muted)}.kpi .v{font-size:21px;font-weight:900;margin-top:3px}.kpi .s{font-size:9px;color:var(--muted);margin-top:2px}
+.main{display:grid;grid-template-columns:minmax(690px,1.28fr) minmax(550px,.92fr);gap:12px}
+.card{background:#fff;border:1px solid var(--line);border-radius:11px;box-shadow:var(--shadow);overflow:hidden}.head{padding:11px 13px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:9px;align-items:center}.head strong{font-size:12px}.filters{display:flex;gap:6px;flex-wrap:wrap}.input,.select{border:1px solid var(--line);border-radius:7px;padding:7px 8px;background:#fff;font-size:10px}.input{width:205px}
+.tablewrap{max-height:720px;overflow:auto}table{width:100%;border-collapse:collapse;min-width:980px}th,td{padding:8px 9px;border-bottom:1px solid var(--line);font-size:10.5px;text-align:left;vertical-align:middle}th{position:sticky;top:0;background:#fafafa;color:#475467;z-index:2;font-size:9.5px}tbody tr{cursor:pointer}tbody tr:hover td{background:#fbfdff}tbody tr.sel td{background:#eff8ff}
+.name{font-weight:800;font-size:11.5px}.small{font-size:9px;color:var(--muted);margin-top:2px}.badge{display:inline-flex;padding:3px 6px;border-radius:999px;font-size:8.8px;font-weight:800;white-space:nowrap}.green{background:var(--greenSoft);color:var(--green)}.blue{background:#eff8ff;color:#175cd3}.amberB{background:var(--amberSoft);color:var(--amber)}.red{background:var(--redSoft);color:var(--red)}.violet{background:var(--violetSoft);color:var(--violet)}.gray{background:var(--graySoft);color:var(--gray)}
+.progress{height:6px;background:#eef2f6;border-radius:99px;overflow:hidden;margin-top:3px}.progress span{display:block;height:100%;background:var(--blue)}
+.hero{padding:13px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#fff,#fbfdff)}.heroRow{display:flex;justify-content:space-between;gap:10px}.hero h2{font-size:17px;margin:0}.mail{font-size:9.5px;color:var(--muted);margin-top:3px}.meta{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}.quick{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:9px}.q{border:1px solid var(--line);border-radius:7px;padding:7px}.q .k{font-size:8.8px;color:var(--muted)}.q .v{font-size:11px;font-weight:800;margin-top:2px}
+.tabs{display:flex;gap:2px;overflow:auto;padding:7px 8px;border-bottom:1px solid var(--line);background:#fafafa}.tab{border:0;background:transparent;border-radius:6px;padding:6px 7px;font-size:9.8px;color:#475467;white-space:nowrap}.tab.active{background:#fff;color:var(--blue2);font-weight:800;box-shadow:0 1px 3px rgba(16,24,40,.08)}.pane{display:none;padding:12px}.pane.active{display:block}
+.section{margin-bottom:14px}.sectionTitle{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:9.8px;font-weight:900;text-transform:uppercase;letter-spacing:.04em;color:#475467;margin-bottom:6px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.field{border:1px solid var(--line);border-radius:7px;padding:8px;min-height:52px}.field .k{font-size:8.8px;color:var(--muted)}.field .v{font-size:11px;font-weight:700;margin-top:3px}.manual{border-style:dashed;background:#fffdf6}.manual .k:after{content:" · manual";color:var(--amber);font-weight:800}
+.alert{padding:8px 9px;border-radius:7px;font-size:9.8px;line-height:1.45;margin-top:7px}.info{background:var(--blueSoft);border:1px solid #cfe7fa;color:#1849a9}.warn{background:var(--amberSoft);border:1px solid #fedf89;color:#7a2e0e}.danger{background:var(--redSoft);border:1px solid #fecdca;color:#912018}
+.pipeline{display:flex;overflow:auto;padding:4px 0 8px}.step{min-width:112px;flex:1;position:relative;padding-right:10px}.step:not(:last-child):after{content:"";position:absolute;top:16px;right:0;width:10px;height:2px;background:#d0d5dd}.circle{width:33px;height:33px;border-radius:50%;display:grid;place-items:center;border:2px solid #d0d5dd;background:#fff;color:#667085;font-weight:900;font-size:10px}.step.done .circle{background:var(--green);border-color:var(--green);color:#fff}.step.current .circle{background:var(--blue);border-color:var(--blue);color:#fff}.step.stop .circle{background:var(--red);border-color:var(--red);color:#fff}.step .t{font-size:9.5px;font-weight:800;margin-top:5px}.step .d{font-size:8.5px;line-height:1.3;color:var(--muted);margin-top:2px}
+.pending{border:1px solid var(--line);border-radius:8px;padding:8px;margin-bottom:6px}.pendingTop{display:flex;justify-content:space-between;gap:8px}.pending .title{font-size:10px;font-weight:800}.pending .why{font-size:8.8px;color:var(--muted);line-height:1.4;margin-top:3px}.priority{font-size:8px;font-weight:900;padding:2px 5px;border-radius:99px;height:max-content}.pHigh{background:var(--redSoft);color:var(--red)}.pMed{background:var(--amberSoft);color:var(--amber)}
+.course{border:1px solid var(--line);border-radius:7px;padding:7px;margin-bottom:5px}.courseHead{display:flex;justify-content:space-between;font-size:9.5px;font-weight:700}.course .s{font-size:8.7px;color:var(--muted);margin-top:3px}
+.docsummary{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px}.docsummary .box{border:1px solid var(--line);border-radius:7px;padding:8px}.docsummary .n{font-size:18px;font-weight:900}.docsummary .l{font-size:8.8px;color:var(--muted)}
+.docrow{display:grid;grid-template-columns:minmax(170px,1.5fr) minmax(160px,1fr) auto;gap:7px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:8px;margin-bottom:6px}.docname{font-size:10px;font-weight:800}.docnote{font-size:8.7px;color:var(--muted);margin-top:2px}.docrow select{border:1px solid var(--line);border-radius:7px;padding:7px;font-size:9.5px;background:#fff}.docrow.changed{border-color:#fdb022;background:#fffcf5}
+.savebar{display:flex;justify-content:space-between;gap:8px;align-items:center;background:#fafafa;border:1px solid var(--line);border-radius:8px;padding:8px;margin-top:9px}.savebar .note{font-size:8.8px;color:var(--muted)}
+.copybox{border:1px solid var(--line);border-radius:7px;padding:8px;background:#fcfcfd;white-space:pre-wrap;font-size:9.5px;line-height:1.5}
+.helpGrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.helpCard{border:1px solid var(--line);border-radius:8px;padding:8px}.helpCard h3{font-size:10px;margin:0 0 5px}.helpCard p,.helpCard li{font-size:9px;line-height:1.45;color:#475467}.helpCard ul{padding-left:15px;margin:4px 0}
+.schema{border:1px solid var(--line);border-radius:8px;padding:8px;background:#fcfcfd}.schema code{font-size:8.8px}.schema .ok{color:var(--green);font-weight:800}
+.modal{position:fixed;inset:0;background:rgba(16,24,40,.4);display:none;align-items:center;justify-content:center;padding:14px;z-index:50}.modal.open{display:flex}.modalbox{width:min(850px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:13px;box-shadow:0 20px 55px rgba(16,24,40,.3)}.modalhead{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.modalbody{padding:13px}
+@media(max-width:1220px){.main{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(3,1fr)}}@media(max-width:760px){.shell{padding:9px}.kpis{grid-template-columns:repeat(2,1fr)}.quick,.grid2,.grid3,.helpGrid,.docsummary{grid-template-columns:1fr}.docrow{grid-template-columns:1fr}.input{width:100%}}
+
+.today{display:grid;grid-template-columns:repeat(5,minmax(130px,1fr));gap:8px;margin-bottom:12px}
+.todo{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 11px;box-shadow:var(--shadow);text-align:left}
+.todo:hover{border-color:#98a2b3}
+.todo .n{font-size:20px;font-weight:900}.todo .t{font-size:9.5px;font-weight:800;margin-top:2px}.todo .d{font-size:8.7px;color:var(--muted);margin-top:2px;line-height:1.3}
+.todo.high .n{color:var(--red)}.todo.med .n{color:var(--amber)}.todo.infox .n{color:var(--blue2)}
+.nextAction{border:1px solid #b2ddff;background:#eff8ff;border-radius:9px;padding:10px;margin-top:10px}
+.nextAction .eyebrow{font-size:8.5px;font-weight:900;text-transform:uppercase;letter-spacing:.05em;color:#175cd3}
+.nextAction .maintext{font-size:12px;font-weight:900;margin-top:3px}
+.nextAction .subtext{font-size:9px;color:#475467;margin-top:4px;line-height:1.4}
+.flowHelp{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-top:8px}
+.flowHelp .stepHelp{border:1px solid var(--line);border-radius:8px;padding:9px}
+.flowHelp .stepHelp b{font-size:9.8px}.flowHelp .stepHelp p{font-size:9px;line-height:1.45;color:#475467;margin:4px 0 0}
+@media(max-width:900px){.today{grid-template-columns:repeat(2,1fr)}}
+
+
+.learnIntro{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px}
+.learnIntro h3{font-size:12px;margin:0 0 5px}.learnIntro p{font-size:9.3px;line-height:1.55;color:#475467;margin:0}
+.manualAuto{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 10px}
+.manualAuto .box{border:1px solid var(--line);border-radius:9px;padding:10px;background:#fff}
+.manualAuto .box h4{font-size:10px;margin:0 0 5px}.manualAuto .box p{font-size:8.9px;line-height:1.5;margin:0;color:#475467}
+.learnFlow{display:flex;flex-direction:column;gap:7px}
+.learnStep{display:grid;grid-template-columns:34px 1fr;gap:9px;border:1px solid var(--line);border-radius:9px;padding:9px;background:#fff}
+.learnStep .num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#eff8ff;color:#175cd3;font-weight:900}
+.learnStep h4{font-size:10.2px;margin:0 0 4px}.learnStep p{font-size:8.9px;line-height:1.45;color:#475467;margin:2px 0}
+.learnStep .where{font-size:8.7px;color:#344054;background:#f9fafb;border-radius:6px;padding:5px 7px;margin-top:5px}
+.docChecklist{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:7px}
+.docChecklist div{border:1px dashed #d0d5dd;border-radius:7px;padding:7px;font-size:8.8px;line-height:1.4}
+.glossary{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+.glossary div{border:1px solid var(--line);border-radius:7px;padding:8px}
+.glossary b{font-size:9.2px}.glossary span{display:block;font-size:8.6px;color:#475467;margin-top:3px;line-height:1.4}
+@media(max-width:760px){.manualAuto,.docChecklist,.glossary{grid-template-columns:1fr}}
+
+
+.integration{
+  display:flex;gap:7px;align-items:center;flex-wrap:wrap;
+  padding:8px 10px;border:1px solid var(--line);border-radius:9px;
+  background:#fff;margin-bottom:10px;font-size:9.5px;color:var(--muted)
+}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;background:#d92d20}
+.dot.ok{background:#12b76a}
+.actionbar{display:flex;gap:6px;flex-wrap:wrap;padding:9px 12px;border-bottom:1px solid var(--line);background:#fff}
+.actionbar .btn{font-size:9.5px;padding:6px 8px}
+.actionbar .recommended{background:#eff8ff;border-color:#b2ddff;color:#175cd3;font-weight:800}
+.actionmodal{position:fixed;inset:0;background:rgba(16,24,40,.45);display:none;align-items:center;justify-content:center;padding:18px;z-index:120}
+.actionmodal.open{display:flex}
+.actionbox{width:min(760px,96vw);max-height:90vh;overflow:auto;background:#fff;border-radius:12px;border:1px solid var(--line);box-shadow:0 24px 70px rgba(16,24,40,.25)}
+.actionhead{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}
+.actionbody{padding:14px}
+.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.formrow{display:flex;flex-direction:column;gap:4px}
+.formrow.full{grid-column:1/-1}
+.formrow label{font-size:9px;font-weight:800;color:#475467;text-transform:uppercase;letter-spacing:.03em}
+.formrow input,.formrow select,.formrow textarea{border:1px solid var(--line);border-radius:7px;padding:8px;font-size:11px;width:100%;background:#fff}
+.formrow textarea{min-height:120px;resize:vertical}
+.actionfoot{display:flex;justify-content:flex-end;gap:7px;padding:11px 14px;border-top:1px solid var(--line);background:#fafafa}
+.saveState{font-size:9.5px;color:var(--muted);margin-right:auto;align-self:center}
+.coherence{border:1px solid var(--line);border-radius:8px;padding:8px;margin-top:7px;font-size:9.5px;line-height:1.45}
+.coherence.good{background:#ecfdf3;border-color:#abefc6;color:#05603a}
+.coherence.warn{background:#fffaeb;border-color:#fedf89;color:#7a2e0e}
+@media(max-width:900px){.formgrid{grid-template-columns:1fr}.formrow.full{grid-column:auto}}
+
+
+.catalogTags{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.catalogTag{display:inline-flex;align-items:center;gap:5px;padding:4px 7px;border-radius:999px;border:1px solid var(--line);background:#f8fafc;font-size:9.5px;font-weight:700;color:#344054}
+.catalogTag.ok{background:#ecfdf3;border-color:#abefc6;color:#05603a}
+.catalogTag.bad{background:#fef3f2;border-color:#fecdca;color:#b42318}
+.catalogTag.muted{background:#f2f4f7;color:#667085}
+.catalogWarn{margin-top:7px;padding:7px 8px;border-radius:7px;background:#fffaeb;border:1px solid #fedf89;color:#7a2e0e;font-size:9.5px;line-height:1.45}
+.catalogTools{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:7px}
+.catalogTools .btn{font-size:9px;padding:5px 7px}
+.field.invalidField{border-color:#fecdca;background:#fff8f7}
+
+</style>
+  <script src="config.js"></script>
+</head>
+<body>
+<div class="shell">
+ <div class="top">
+  <div class="brand"><div class="logo">RIM</div><div><h1>Gestión de pasantías y nuevos miembros</h1><div class="sub">Interfaz administrativa integrable · los datos se suministran mediante API</div></div></div>
+  <div class="demo" id="modeBadge">CARGANDO DATOS...</div>
+ </div>
+
+ <div class="integration" id="integrationStatus">
+  <span class="dot" id="apiDot"></span>
+  <b id="apiStatusText">API pendiente de integración</b>
+  <span>La interfaz no contiene datos ficticios ni credenciales. El sistema mayor debe proporcionar el adaptador/API.</span>
+</div>
+<div class="toolbar">
+  <button class="btn primary" id="refresh">Actualizar datos</button>
+  <button class="btn soft" id="helpBtn">¿Cómo funciona?</button>
+ </div>
+
+ <div class="segment">
+  <button class="seg active" data-mode="interns">Pasantías</button>
+  <button class="seg" data-mode="direct">Asistentes directos · pendiente</button>
+ </div>
+
+ <div class="reminder"><div><div class="title" id="remTitle"></div><div class="txt" id="remText"></div></div><div class="count" id="remCount"></div></div>
+ <div class="sectionTitle" style="margin:0 2px 6px">Pendientes de hoy · haz clic para filtrar</div>
+ <div class="today" id="todayActions"></div>
+ <div class="kpis" id="kpis"></div>
+ <div id="metricHelp" class="small" style="margin:-4px 2px 12px 2px;">
+   En “Pasantías”, <b>Documentación completa</b> indica cuántos pasantes tienen su lista de control aplicable completa;
+   <b>Documentos pendientes</b> suma los documentos o controles individuales que aún faltan;
+   y <b>Acciones administrativas pendientes</b> reúne las tareas que requieren intervención del equipo.
+ </div>
+
+ <div class="main">
+  <section class="card">
+   <div class="head"><strong id="tableTitle"></strong><div class="filters">
+    <input id="search" class="input" placeholder="Buscar nombre, correo, encargado...">
+    <select id="stageFilter" class="select"><option value="">Todas las etapas</option></select>
+   </div></div>
+   <div class="tablewrap"><table><thead id="thead"></thead><tbody id="rows"></tbody></table></div>
+  </section>
+  <aside class="card" id="detail"></aside>
+ </div>
+</div>
+
+
+<div class="actionmodal" id="actionModal">
+  <div class="actionbox">
+    <div class="actionhead">
+      <div>
+        <strong id="actionTitle">Acción</strong>
+        <div class="small" id="actionPerson"></div>
+      </div>
+      <button class="btn" id="actionClose">Cerrar</button>
+    </div>
+    <div class="actionbody" id="actionBody"></div>
+    <div class="actionfoot">
+      <div class="saveState" id="actionState"></div>
+      <button class="btn" id="actionCopy" style="display:none">Copiar texto</button>
+      <button class="btn primary" id="actionSave">Guardar y verificar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="helpModal"><div class="modalbox"><div class="modalhead"><strong>Ayuda y arquitectura</strong><button class="btn" onclick="closeHelp()">Cerrar</button></div><div class="modalbody" id="helpContent"></div></div></div>
+
+<script>
+let MODE="interns",selected=0;
+let INTERNS=[];
+const DIRECT=[];
+let DATA_META={};
+let LAST_ERROR="";
+
+const DEFAULT_COMPONENTS=["Investigación Aplicada","Datos y Evaluación","Implementación","Participación Comunitaria"];
+const FIXED_ROUTE_VALUES=[
+  "PASANTÍA ESTÁNDAR",
+  "PASANTÍA TRANSITORIA A CONTRATACIÓN",
+  "ASISTENTE DIRECTO"
+];
+const FIXED_CUALIDAD_VALUES=["PASANTE","ASISTENTE"];
+const FIXED_DOC_STATES=["PENDIENTE","RECIBIDO","VALIDADO","INCOMPLETO","NO_APLICA","SIN_REGISTRO_HISTORICO"];
+const FIXED_INTERVIEW_RESULTS=["Aceptado","Rechazado"];
+const FIXED_TRANSITION_STATES=["Pendiente","Contratado","No contratado","No aplica"];
+const FIXED_LINK_STATES=["Vigente","Finalizado","No aplica"];
+const FIXED_LETTER_STATES=["Pendiente","Preparada","Firmada","Entregada"];
+
+function normControlled(v){
+  return String(v||"").trim().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g," ").toUpperCase();
+}
+function uniqueCatalog(arr){
+  const out=[],seen=new Set();
+  (arr||[]).forEach(v=>{
+    const t=String(v||"").trim();
+    if(!t)return;
+    const k=normControlled(t);
+    if(!seen.has(k)){seen.add(k);out.push(t)}
+  });
+  return out;
+}
+function catalogFromMeta(name,fallback=[]){
+  const c=(DATA_META&&DATA_META.catalogos&&Array.isArray(DATA_META.catalogos[name]))
+    ? DATA_META.catalogos[name] : [];
+  return uniqueCatalog(c.length?c:fallback);
+}
+function componentCatalog(){return catalogFromMeta("componentes",DEFAULT_COMPONENTS)}
+function ownerCatalog(){return catalogFromMeta("encargados",[])}
+function canonicalValue(value,options){
+  const key=normControlled(value);
+  if(!key)return"";
+  return (options||[]).find(x=>normControlled(x)===key)||"";
+}
+function isAllowed(value,options,{allowBlank=true}={}){
+  const t=String(value||"").trim();
+  if(!t)return allowBlank;
+  return !!canonicalValue(t,options);
+}
+function componentValidation(p){
+  const opts=componentCatalog();
+  const values=[p.component1,p.component2].filter(v=>String(v||"").trim());
+  const invalid=values.filter(v=>!canonicalValue(v,opts));
+  return {options:opts,values,invalid,missing:values.length===0};
+}
+function routeValidation(p){
+  const v=String(p.route||"").trim();
+  return {value:v,valid:!v||isAllowed(v,FIXED_ROUTE_VALUES)};
+}
+function qualityValidation(p){
+  const v=String(p.cualidadActual||"").trim();
+  return {value:v,valid:!v||isAllowed(v,FIXED_CUALIDAD_VALUES)};
+}
+function ownerValidation(p){
+  const opts=ownerCatalog();
+  const v=String(p.owner||"").trim();
+  if(!opts.length)return {value:v,valid:true,options:opts,controlled:false};
+  return {value:v,valid:!v||!!canonicalValue(v,opts),options:opts,controlled:true};
+}
+function invalidDocumentStates(p){
+  return (p.docRaw||[]).filter(d=>{
+    const aplica=normControlled(d.aplica||"");
+    if(aplica==="NO"||aplica==="NO APLICA")return false;
+    const est=String(d.estado||"").trim();
+    return est && !isAllowed(est,FIXED_DOC_STATES);
+  });
+}
+function tagHTML(value,valid=true,emptyText="Sin dato"){
+  const t=String(value||"").trim();
+  if(!t)return `<span class="catalogTag muted">${esc(emptyText)}</span>`;
+  return `<span class="catalogTag ${valid?"ok":"bad"}">${esc(t)}${valid?"":" · no reconocido"}</span>`;
+}
+function catalogSummaryHTML(p){
+  const cv=componentValidation(p),rv=routeValidation(p),qv=qualityValidation(p),ov=ownerValidation(p);
+  const issues=[];
+  if(cv.invalid.length)issues.push(`Componente(s) no reconocido(s): ${cv.invalid.join(", ")}`);
+  if(!rv.valid)issues.push(`Ruta de ingreso no reconocida: ${rv.value}`);
+  if(!qv.valid)issues.push(`Cualidad actual no reconocida: ${qv.value}`);
+  if(!ov.valid)issues.push(`Encargado/a no reconocido/a: ${ov.value}`);
+  const badDocs=invalidDocumentStates(p);
+  if(badDocs.length)issues.push(`${badDocs.length} estado(s) documental(es) fuera del catálogo permitido`);
+  return {issues,cv,rv,qv,ov,badDocs};
+}
+
+
+const $=id=>document.getElementById(id);
+
+function esc(v){
+  return String(v??"")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+function cls(v){
+  v=(v||"").toLowerCase();
+  if(v.includes("completo")||v.includes("recibido")||v.includes("validado")||v.includes("vigente")||v.includes("aceptado")||v.includes("activa"))return"green";
+  if(v.includes("contrat")||v.includes("asistente"))return"blue";
+  if(v.includes("pendiente")||v.includes("incompleto")||v.includes("progreso")||v.includes("formalización"))return"amberB";
+  if(v.includes("deneg")||v.includes("rechaz"))return"red";
+  return"gray";
+}
+function fmtDate(v){
+  if(!v)return"—";
+  const s=String(v);
+  const m=s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  return m?`${m[3]}/${m[2]}/${m[1]}`:esc(s);
+}
+function fmtNum(v){
+  return (v===null||v===undefined||v==="")?"—":
+    Number(v).toLocaleString("es-BO",{maximumFractionDigits:2});
+}
+function isYes(v){
+  const s=String(v||"").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+  return ["si","sí","yes","true","1"].includes(s);
+}
+function normalizeDocState(aplica,estado){
+  const a=String(aplica||"").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+  if(["no","no aplica","n/a"].includes(a))return"No aplica";
+  const e=String(estado||"").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+  if(e==="validado"||e==="completo")return"Completo";
+  if(e==="recibido")return"Recibido";
+  if(e==="incompleto")return"Incompleto";
+  if(e==="pendiente"||!e)return"Pendiente";
+  return estado||"Pendiente";
+}
+function stageIntern(p){
+  return p.etapaPortal||p.ingreso||p.estado||"Postulación recibida";
+}
+function stageDirect(p){
+  return p.form&&p.courses===p.total?"Ingreso asistente completo":"Inducción asistente";
+}
+function docCounts(p){
+  const docs=Array.isArray(p.docs)?p.docs:[];
+  const applicable=docs.filter(d=>d[1]!=="No aplica");
+  const complete=applicable.filter(d=>["Completo","Recibido"].includes(d[1])).length;
+  const pending=Math.max(applicable.length-complete,0);
+  return{
+    complete,
+    pending,
+    total:applicable.length,
+    pct:applicable.length?Math.round(complete/applicable.length*100):null
+  };
+}
+function manualPending(p){
+  let a=[];
+  const etapa=stageIntern(p);
+  if(etapa==="Denegado"||etapa==="Denegada")return a;
+  if(!p.decision){
+    a.push(["Resultado de entrevista","Registrar Aceptado/Rechazado cuando corresponda.","ALTA"]);
+    return a;
+  }
+  if(etapa==="Formalización pendiente"){
+    if(!p.owner)a.push(["Encargado","Asignar responsable.","ALTA"]);
+    const cv=componentValidation(p);
+    if(cv.missing)a.push(["Componente","Asignar al menos un componente reconocido.","ALTA"]);
+    if(cv.invalid.length)a.push(["Componente no reconocido",`Corregir: ${cv.invalid.join(", ")}. Selecciona una etiqueta válida del catálogo.`,"ALTA"]);
+    const ov=ownerValidation(p);
+    if(!ov.valid)a.push(["Encargado no reconocido",`El valor “${ov.value}” no coincide con el catálogo actual de encargados. Selecciona el valor correcto.`,"ALTA"]);
+    const rv=routeValidation(p);
+    if(!rv.valid)a.push(["Ruta de ingreso no reconocida",`Corregir “${rv.value}” usando una opción permitida.`,"ALTA"]);
+    const qv=qualityValidation(p);
+    if(!qv.valid)a.push(["Cualidad actual no reconocida",`Corregir “${qv.value}” usando una opción permitida.`,"ALTA"]);
+    if(!p.start)a.push(["Fecha inicio","Registrar inicio real.","ALTA"]);
+    if(!p.end)a.push(["Fecha fin","Registrar fecha pactada.","ALTA"]);
+    if(p.target==null)a.push(["Horas pactadas","Registrar la meta oficial solo cuando exista en el compromiso.","ALTA"]);
+    if(!p.plannerFolderUrl)a.push(["Carpeta personal / Planner","Crear manualmente la carpeta y Planner; luego registrar aquí el enlace de la carpeta.","MEDIA"]);
+  }
+  if(p.estado==="Vigente"&&p.target==null){
+    a.push(["Horas pactadas","Sin meta oficial no se calcula % de horas ni horas restantes.","ALTA"]);
+  }
+  if(p.estado==="Vigente"&&!p.plannerFolderUrl){
+    a.push(["Carpeta personal / Planner","Registrar el enlace de la carpeta personal que contiene el Planner y las evidencias.","ALTA"]);
+  }
+  if(p.estado==="Vigente"&&!(p.officialSchedule&&p.officialSchedule.existe)){
+    a.push(["Horario oficial H1","Verificar que exista el horario oficial correspondiente al inicio de la pasantía.","MEDIA"]);
+  }
+  const invalidDocs=invalidDocumentStates(p);
+  if(invalidDocs.length){
+    a.push(["Estado documental no reconocido",`${invalidDocs.length} registro(s) tienen un estado fuera de las opciones permitidas y deben corregirse.`,"ALTA"]);
+  }
+  const dc=docCounts(p);
+  if(dc.total>0&&dc.pending>0){
+    a.push(["Documentación física",`${dc.pending} documento(s)/control(es) todavía pendientes o incompletos.`,"MEDIA"]);
+  }
+  return a;
+}
+function nextMonday(){
+  const d=new Date(),add=(8-d.getDay())%7||7,n=new Date(d);
+  n.setDate(d.getDate()+add);
+  return n.toLocaleDateString("es-BO",{weekday:"long",day:"2-digit",month:"2-digit",year:"numeric"});
+}
+function adaptPerson(x){
+  const ent=x.entrevista||{},ing=x.ingreso||{},pas=x.pasantia||{},prog=x.progreso||{};
+  const cursos=x.cursos||{},doc=x.documentacion||{},inf=x.informes||{};
+  const itemsDoc=Array.isArray(doc.items)?doc.items:[];
+  return{
+    name:x.nombre||"",
+    mail:x.correo||"",
+    route:x.ruta||"",
+    etapaPortal:x.etapaPortal||"",
+    decision:ent.resultado||"",
+    interviewDate:ent.fecha||"",
+    interviewer:ent.entrevistador||"",
+    interviewSchedule:ent.estadoProgramacion||"",
+    ingreso:ing.estado||"",
+    induction:ing.estadoInduccion||"",
+    formalization:ing.estadoFormalizacion||"",
+    horarioPostulacion:ing.horarioPostulacionVinculado||"",
+    courseStart:ing.fechaInicioPlazoCursos||"",
+    courseDeadline:ing.fechaLimiteCursos||"",
+    courseCompleted:ing.fechaCompletadoCursos||"",
+    postFolderUrl:ing.carpetaPostulacionUrl||"",
+    postFolderId:ing.carpetaPostulacionId||"",
+    noticeStatus:ing.estadoAvisoEncargados||"",
+    noticeDate:ing.fechaAvisoEncargados||"",
+    noticeRecipients:ing.destinatariosAviso||"",
+    postSchedule:x.horarioPostulacion||{},
+    declaredWeeklyHours:(x.horarioPostulacion&&x.horarioPostulacion.horasSemanales!=null)?x.horarioPostulacion.horasSemanales:null,
+    officialSchedule:x.horarioOficial||{},
+    periods:(x.periodos&&Array.isArray(x.periodos.items))?x.periodos.items:[],
+    transition:pas.transicionLaboral||{},
+    estado:pas.estado||"",
+    owner:pas.encargado||"",
+    component1:pas.componente1||"",
+    component2:pas.componente2||"",
+    comp:[pas.componente1,pas.componente2].filter(Boolean).join(" · "),
+    start:pas.fechaInicio||"",
+    end:pas.fechaFin||"",
+    target:pas.horasObjetivo,
+    plannerFolderUrl:pas.linkPlanner||x.linkPlanner||"",
+    hours:prog.horasValidasCumplimiento??0,
+    time:prog.porcentajeTiempo,
+    pctHours:prog.porcentajeHoras,
+    remaining:prog.horasRestantes,
+    progressState:prog.estadoDatos||"",
+    progressObs:prog.observacion||"",
+    extension:isYes(pas.tieneExtension),
+    extensionStart:pas.fechaInicioExtension||"",
+    extensionEnd:pas.fechaFinExtension||"",
+    cualidadActual:pas.cualidadActual||"",
+    cualidadPasada:pas.cualidadPasada||"",
+    courses:cursos.aprobados??0,
+    total:cursos.requeridos??0,
+    courseDetail:Array.isArray(cursos.detalle)?cursos.detalle:[],
+    docs:itemsDoc.map(d=>[
+      d.documento||d.codigo||"Documento",
+      normalizeDocState(d.aplica,d.estado),
+      d.observacion||d.grupo||""
+    ]),
+    docRaw:itemsDoc,
+    docSummary:doc.resumen||{},
+    reportFolderUrl:inf.carpetaPersonaUrl||"",
+    reports:Array.isArray(inf.items)?inf.items:[],
+    origin:x.origenPortal||"",
+    updated:x.ultimaActualizacion||"",
+    observation:x.observacionIngreso||""
+  };
+}
+function currentData(){return MODE==="interns"?INTERNS:DIRECT}
+function filtered(){
+  const q=$("search").value.toLowerCase(),sf=$("stageFilter").value;
+  return currentData()
+    .map((p,i)=>({...p,_i:i,_s:MODE==="interns"?stageIntern(p):stageDirect(p)}))
+    .filter(p=>{
+      const hay=`${p.name||""} ${p.mail||""} ${p.owner||""} ${p.comp||""} ${p.route||""}`.toLowerCase();
+      return(!q||hay.includes(q))&&(!sf||p._s===sf);
+    });
+}
+
+function pendingBuckets(){
+  const all=INTERNS||[];
+  const interview=all.filter(p=>!p.decision && stageIntern(p)!=="Denegado");
+  const courses=all.filter(p=>stageIntern(p)==="Cursos en progreso");
+  const formal=all.filter(p=>stageIntern(p)==="Formalización pendiente");
+  const docs=all.filter(p=>{const d=docCounts(p);return d.total>0&&d.pending>0;});
+  const active=all.filter(p=>stageIntern(p)==="Pasantía activa");
+  return {interview,courses,formal,docs,active};
+}
+function setStageFilter(stage){
+  const s=$("stageFilter");
+  if(s){
+    s.value=stage||"";
+    selected=0;
+    renderTable();
+    renderDetail();
+  }
+}
+function renderTodayActions(){
+  const box=$("todayActions");
+  if(!box)return;
+  if(MODE!=="interns"){
+    box.innerHTML=`<div class="todo infox" style="grid-column:1/-1"><div class="n">—</div><div class="t">Ruta separada</div><div class="d">Los asistentes directos todavía no están integrados en esta vista.</div></div>`;
+    return;
+  }
+  const b=pendingBuckets();
+  const items=[
+    ["Entrevistas",b.interview.length,"Falta registrar decisión","Entrevista pendiente","high"],
+    ["Cursos",b.courses.length,"Personas todavía en inducción","Cursos en progreso","med"],
+    ["Formalización",b.formal.length,"Listas para completar datos de inicio","Formalización pendiente","high"],
+    ["Documentación",b.docs.length,"Con uno o más controles pendientes","", "med"],
+    ["Activas",b.active.length,"Pasantías actualmente vigentes","Pasantía activa","infox"]
+  ];
+  box.innerHTML=items.map((x,i)=>`<button class="todo ${x[4]}" data-stage="${esc(x[3])}" data-special="${i===3?"docs":""}">
+    <div class="n">${x[1]}</div><div class="t">${esc(x[0])}</div><div class="d">${esc(x[2])}</div>
+  </button>`).join("");
+  box.querySelectorAll(".todo").forEach(btn=>{
+    btn.onclick=()=>{
+      if(btn.dataset.special==="docs"){
+        $("stageFilter").value="";
+        $("search").value="";
+        const first=INTERNS.findIndex(p=>{const d=docCounts(p);return d.total>0&&d.pending>0;});
+        if(first>=0){selected=first;renderTable();renderDetail();document.querySelector('#detail')?.scrollIntoView({behavior:"smooth",block:"start"});}
+        return;
+      }
+      setStageFilter(btn.dataset.stage||"");
+    };
+  });
+}
+function nextActionFor(p){
+  const etapa=stageIntern(p);
+  const quality=catalogSummaryHTML(p);
+  if(quality.issues.length){
+    return ["Corregir dato no reconocido",quality.issues[0]+". La página lo trata como pendiente hasta que se seleccione un valor válido.","Datos de pasantía"];
+  }
+  if(etapa==="Denegado")return ["Proceso cerrado","No se requieren acciones de ingreso mientras el estado permanezca denegado.",""];
+  if(!p.decision)return ["Registrar entrevista","Completa la fecha, entrevistador/a y resultado. Si es aceptado, el flujo continúa a inducción.","Entrevista"];
+  if(etapa==="Cursos en progreso"){
+    if(!p.courseStart)return ["Enviar correo de cursos","Envía manualmente el correo de cursos de inducción. Después registra la fecha real de envío para iniciar el plazo de 14 días.","Cursos"];
+    return ["Acompañar cursos de inducción","Revisa qué cursos faltan y el plazo vigente. Las notas se leen automáticamente y no se editan desde esta página.","Cursos"];
+  }
+  if(etapa==="Formalización pendiente"){
+    const mp=manualPending(p);
+    const faltan=mp.filter(x=>["Encargado","Componente","Fecha inicio","Fecha fin","Horas pactadas"].includes(x[0])).map(x=>x[0]);
+    return ["Completar formalización",faltan.length?`Faltan: ${faltan.join(", ")}.`:"Revisa documentación y confirma que los datos de inicio estén completos.","Formalización"];
+  }
+  if(etapa==="Pasantía activa"){
+    const dc=docCounts(p);
+    if(p.target==null)return ["Registrar horas objetivo","No deben inferirse. Registra únicamente las horas acordadas formalmente.","Datos de pasantía"];
+    if(dc.total>0&&dc.pending>0)return ["Resolver documentación pendiente",`Quedan ${dc.pending} documento(s)/control(es) pendientes o incompletos.`,"Documentación"];
+    const rev=(p.periods||[]).filter(r=>r&&r.requiereRevision);
+    if(rev.length)return ["Revisar período",`${rev.length} período(s) requieren intervención: cierre final o excepción detectada.`,"Períodos"];
+    return ["Seguimiento automático","Planner, asistencia, períodos intermedios e informes de seguimiento se procesan automáticamente. Intervén solo ante alertas o en el cierre final.","Progreso"];
+  }
+  if(/terminad|finaliz/i.test(etapa))return ["Completar cierre","Revisa informe final, documentación y que la situación administrativa quede correctamente cerrada.","Cierre"];
+  if(/retir/i.test(etapa))return ["Verificar cierre por retiro","Comprueba fecha, observación e informes/documentación que correspondan.","Cierre"];
+  return ["Revisar ficha","Consulta los pendientes detectados y sigue la acción administrativa correspondiente.","Pendientes"];
+}
+
+function render(){
+  $("metricHelp").style.display=MODE==="interns"?"block":"none";
+  document.querySelectorAll(".seg").forEach(b=>b.classList.toggle("active",b.dataset.mode===MODE));
+  renderFilters();
+  renderKpis();
+  renderReminder();
+  renderTodayActions();
+  renderTable();
+  renderDetail();
+}
+function renderFilters(){
+  const s=$("stageFilter");
+  let vals=[];
+  if(MODE==="interns"){
+    const orden=["Entrevista pendiente","Cursos en progreso","Formalización pendiente","Pasantía activa","Denegado"];
+    const reales=[...new Set(INTERNS.map(stageIntern).filter(Boolean))];
+    vals=[...orden.filter(x=>reales.includes(x)),...reales.filter(x=>!orden.includes(x)).sort((a,b)=>a.localeCompare(b,"es"))];
+  }else{
+    vals=[];
+  }
+  const actual=s.value;
+  s.innerHTML='<option value="">Todas las etapas</option>'+vals.map(v=>`<option>${esc(v)}</option>`).join("");
+  if(vals.includes(actual))s.value=actual;
+  $("tableTitle").textContent=MODE==="interns"?"Pasantías e ingreso":"Asistentes directos";
+}
+function renderKpis(){
+  let vals;
+  if(MODE==="interns"){
+    const r=DATA_META.resumen||{};
+    vals=[
+      ["Total",INTERNS.length,"personas visibles"],
+      ["Entrevista pendiente",r.entrevistaPendiente??INTERNS.filter(p=>stageIntern(p)==="Entrevista pendiente").length,"en seguimiento"],
+      ["Cursos en progreso",r.cursosEnProgreso??INTERNS.filter(p=>stageIntern(p)==="Cursos en progreso").length,"inducción"],
+      ["Formalización pendiente",r.formalizacionPendiente??INTERNS.filter(p=>stageIntern(p)==="Formalización pendiente").length,"por completar"],
+      ["Pasantías activas",r.pasantiaActiva??INTERNS.filter(p=>stageIntern(p)==="Pasantía activa").length,"vigentes"],
+      ["Denegados",r.denegados??INTERNS.filter(p=>stageIntern(p)==="Denegado").length,"sin creación operativa"]
+    ];
+  }else{
+    vals=[
+      ["Integración","Pendiente","ruta separada"],
+      ["Datos reales","0","no conectados aún"],
+      ["Formulario","—","fuente separada"],
+      ["Cursos","—","cruce pendiente"],
+      ["Base pasantías","No aplica","no mezclar rutas"],
+      ["Escritura","Desactivada","consulta"]
+    ];
+  }
+  $("kpis").innerHTML=vals.map(v=>`<div class="kpi"><div class="k">${esc(v[0])}</div><div class="v">${esc(v[1])}</div><div class="s">${esc(v[2])}</div></div>`).join("");
+}
+function renderReminder(){
+  if(MODE==="interns"){
+    const n=INTERNS.reduce((a,p)=>a+manualPending(p).length,0);
+    $("remCount").textContent=n;
+    $("remTitle").textContent=new Date().getDay()===1?"Hoy es lunes: revisar pendientes manuales":"Revisión semanal de pendientes";
+    $("remText").textContent=`${n} acciones administrativas detectadas con las reglas actuales. Próxima revisión visual: ${nextMonday()}.`;
+  }else{
+    $("remCount").textContent="—";
+    $("remTitle").textContent="Asistentes directos: integración pendiente";
+    $("remText").textContent="Esta ruta permanece separada del flujo de pasantías. Los nuevos miembros directos se integrarán desde su fuente propia.";
+  }
+}
+function renderTable(){
+  if(MODE==="interns"){
+    $("thead").innerHTML="<tr><th>Persona</th><th>Ruta</th><th>Etapa</th><th>Encargado</th><th>Estado</th><th>Documentación física</th><th>Pendientes</th><th>Progreso</th></tr>";
+  }else{
+    $("thead").innerHTML="<tr><th>Asistente</th><th>Estado de integración</th><th>Fuente</th><th>Base de pasantías</th></tr>";
+  }
+  const arr=filtered();
+  if(!arr.length){
+    const cols=MODE==="interns"?8:4;
+    $("rows").innerHTML=`<tr><td colspan="${cols}" class="small">${MODE==="interns"?"Sin resultados para los filtros actuales.":"La ruta de asistentes directos aún no está integrada a esta lectura."}</td></tr>`;
+    return;
+  }
+  if(MODE==="interns"){
+    $("rows").innerHTML=arr.map(p=>{
+      const dc=docCounts(p),mp=manualPending(p);
+      const docText=dc.total===0?"No aplica aún":`${dc.pct??0}%`;
+      const progress=p.time==null?"—":`${fmtNum(p.time)}% tiempo`;
+      return`<tr data-i="${p._i}" class="${selected===p._i?'sel':''}">
+        <td><div class="name">${esc(p.name)}</div><div class="small">${esc(p.mail)}</div></td>
+        <td><span class="badge ${cls(p.route)}">${esc(p.route||"—")}</span></td>
+        <td><span class="badge ${cls(p._s)}">${esc(p._s)}</span></td>
+        <td>${esc(p.owner||"—")}</td>
+        <td>${esc(p.estado||p.ingreso||"—")}</td>
+        <td>${esc(docText)}${dc.total?`<div class="progress"><span style="width:${Math.min(100,dc.pct??0)}%"></span></div><div class="small">${dc.pending} pendientes</div>`:""}</td>
+        <td>${mp.length?`<span class="badge red">${mp.length}</span>`:'<span class="badge green">0</span>'}</td>
+        <td>${esc(progress)}</td>
+      </tr>`;
+    }).join("");
+  }
+  document.querySelectorAll("tr[data-i]").forEach(tr=>tr.onclick=()=>{
+    selected=Number(tr.dataset.i);
+    renderTable();
+    renderDetail();
+  });
+}
+
+function coherenceCheck(p){
+  const target=Number(p.target);
+  const weekly=Number(p.declaredWeeklyHours);
+  if(!Number.isFinite(target)||target<=0||!Number.isFinite(weekly)||weekly<=0||!p.start||!p.end){
+    return {status:"pending",text:"Para revisar coherencia se necesitan fechas oficiales, horas objetivo y horas semanales declaradas."};
+  }
+  const a=new Date(String(p.start).slice(0,10)+"T00:00:00");
+  const b=new Date(String(p.end).slice(0,10)+"T00:00:00");
+  if(isNaN(a)||isNaN(b)||b<a)return {status:"warn",text:"Revisar fechas oficiales: no permiten calcular una capacidad aproximada."};
+  const days=Math.floor((b-a)/86400000)+1;
+  const weeks=days/7;
+  const approx=weekly*weeks;
+  if(target>approx+0.01){
+    return {status:"warn",text:`Posible incoherencia: ${fmtNum(target)} h objetivo superan la capacidad aproximada de ${fmtNum(approx)} h según ${fmtNum(weekly)} h/semana y las fechas registradas. No se modifica ningún dato automáticamente.`};
+  }
+  return {status:"good",text:`Revisión orientativa: ${fmtNum(target)} h objetivo están dentro de una capacidad aproximada de ${fmtNum(approx)} h según la disponibilidad declarada. Aun así, la confirmación es administrativa.`};
+}
+function renderPersonActions(p){
+  const box=$("personActions");
+  if(!box)return;
+  const stage=stageIntern(p);
+  const actions=[];
+  if(!p.decision)actions.push(["interview","Registrar entrevista",true]);
+  if(p.decision && !/deneg|rechaz/i.test(p.decision))actions.push(["courses","Registrar envío de cursos",stage==="Cursos en progreso"]);
+  if(stage==="Formalización pendiente"||p.estado==="Vigente")actions.push(["formalization","Formalización",stage==="Formalización pendiente"]);
+  const q=catalogSummaryHTML(p);
+  if(!q.rv.valid||!q.qv.valid)actions.push(["classification","Corregir clasificación",true]);
+  if((p.docRaw||[]).length)actions.push(["document","Actualizar documento",false]);
+  if(stage==="Formalización pendiente"||p.estado==="Vigente")actions.push(["folder","Carpeta personal",!p.plannerFolderUrl]);
+  if(p.estado==="Vigente")actions.push(["extension","Extensión",false],["withdrawal","Retiro",false],["transition","Transición laboral",false]);
+  if(/terminad|finaliz/i.test(stage)||/terminad|finaliz/i.test(p.estado||""))actions.push(["letter","Carta de culminación",true]);
+  box.innerHTML=actions.map(a=>`<button class="btn ${a[2]?"recommended":""}" data-action="${a[0]}">${esc(a[1])}</button>`).join("") || '<span class="small">Sin acciones administrativas sugeridas para esta etapa.</span>';
+  box.querySelectorAll("[data-action]").forEach(b=>b.onclick=()=>openActionModal(b.dataset.action,p));
+}
+
+function renderDetail(){
+  const p=currentData()[selected]||currentData()[0];
+  if(!p){
+    $("detail").innerHTML=MODE==="direct"
+      ?`<div class="pane active"><div class="alert info"><b>Ruta separada.</b> Los asistentes directos todavía no están conectados a esta API. Esta pantalla no usa datos simulados y no los incorpora a la base operativa de pasantías.</div></div>`
+      :"";
+    return;
+  }
+  if(MODE==="direct")return;
+
+  const dc=docCounts(p),mp=manualPending(p);
+  const docsLabel=dc.total?`${dc.pct??0}%`:"No aplica";
+  $("detail").innerHTML=`
+    <div class="hero">
+      <div class="heroRow">
+        <div><h2>${esc(p.name)}</h2><div class="mail">${esc(p.mail)}</div></div>
+        <span class="badge ${cls(stageIntern(p))}">${esc(stageIntern(p))}</span>
+      </div>
+      <div class="meta">
+        <span class="badge ${cls(p.route)}">${esc(p.route||"Sin ruta")}</span>
+        <span class="badge gray">Encargado: ${esc(p.owner||"—")}</span>
+        ${(()=>{const c=componentValidation(p);return [p.component1,p.component2].filter(Boolean).map(v=>tagHTML(v,!!canonicalValue(v,c.options))).join("")||tagHTML("",true,"Sin componente")})()}
+        <span class="badge gray">${esc(p.origin||"")}</span>
+      </div>
+      <div class="quick">
+        <div class="q"><div class="k">Cursos</div><div class="v">${esc(`${p.courses??0}/${p.total??0}`)}</div></div>
+        <div class="q"><div class="k">Documentación</div><div class="v">${esc(docsLabel)}</div></div>
+        <div class="q"><div class="k">Pendientes</div><div class="v">${mp.length}</div></div>
+        <div class="q"><div class="k">Horas válidas</div><div class="v">${fmtNum(p.hours)} h</div></div>
+        <div class="q"><div class="k">% tiempo</div><div class="v">${p.time==null?"—":fmtNum(p.time)+"%"}</div></div>
+      </div>
+      ${(()=>{const n=nextActionFor(p);return `<div class="nextAction"><div class="eyebrow">Qué debes hacer ahora</div><div class="maintext">${esc(n[0])}</div><div class="subtext">${esc(n[1])}</div></div>`})()}
+    </div>
+    <div class="actionbar" id="personActions"></div>
+    <div class="tabs">
+      <button class="tab active" data-tab="summary">Resumen</button>
+      <button class="tab" data-tab="courses">Cursos</button>
+      <button class="tab" data-tab="docs">Documentación física</button>
+      <button class="tab" data-tab="pending">Pendientes</button>
+      <button class="tab" data-tab="data">Datos de pasantía</button>
+      <button class="tab" data-tab="periods">Períodos</button>
+      <button class="tab" data-tab="reports">Informes</button>
+      <button class="tab" data-tab="help">Ayuda</button>
+    </div>
+    <div class="pane active" id="pane-summary">
+      <div class="section">
+        <div class="sectionTitle">Estado general</div>
+        ${(()=>{const q=catalogSummaryHTML(p);return q.issues.length?`<div class="alert warn"><b>Dato administrativo a corregir:</b><br>${q.issues.map(esc).join("<br>")}<br><br>La página no considera válido un texto que no coincida con el catálogo correspondiente.</div>`:""})()}
+        <div class="grid3">
+          <div class="field"><div class="k">Etapa</div><div class="v">${esc(stageIntern(p))}</div></div>
+          <div class="field"><div class="k">Resultado entrevista</div><div class="v">${esc(p.decision||"Pendiente")}</div></div>
+          <div class="field"><div class="k">Estado de ingreso</div><div class="v">${esc(p.ingreso||"—")}</div></div>
+          <div class="field"><div class="k">Estado pasantía</div><div class="v">${esc(p.estado||"—")}</div></div>
+          <div class="field"><div class="k">Inicio</div><div class="v">${fmtDate(p.start)}</div></div>
+          <div class="field"><div class="k">Fin planificado</div><div class="v">${fmtDate(p.end)}</div></div>
+        </div>
+        ${p.progressState&&p.progressState!=="OK"?`<div class="alert warn"><b>Datos de progreso a revisar:</b><br>${esc(p.progressState)}${p.progressObs?`<br>${esc(p.progressObs)}`:""}</div>`:""}
+      </div>
+      <div class="section">
+        <div class="sectionTitle">Postulación y coordinación inicial</div>
+        <div class="grid3">
+          <div class="field"><div class="k">Horario de postulación</div><div class="v">${p.postSchedule&&p.postSchedule.existe?(p.postSchedule.vinculado?"Vinculado":"Registrado"):"Sin registro trazable"}</div></div>
+          <div class="field"><div class="k">Horas semanales declaradas</div><div class="v">${p.postSchedule&&p.postSchedule.horasSemanales!=null?fmtNum(p.postSchedule.horasSemanales)+" h":"—"}</div></div>
+          <div class="field"><div class="k">Aviso a encargados</div><div class="v">${esc(p.noticeStatus||"—")}</div></div>
+        </div>
+        <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:8px">
+          ${p.postSchedule&&p.postSchedule.pdfUrl?`<a class="btn soft" href="${esc(p.postSchedule.pdfUrl)}" target="_blank" rel="noopener">Abrir PDF del horario</a>`:""}
+          ${p.postFolderUrl?`<a class="btn soft" href="${esc(p.postFolderUrl)}" target="_blank" rel="noopener">Abrir carpeta de postulación</a>`:""}
+        </div>
+      </div>
+    </div>
+    <div class="pane" id="pane-courses">${coursesHTML(p)}</div>
+    <div class="pane" id="pane-docs">${docsHTML(p)}</div>
+    <div class="pane" id="pane-pending">
+      <div class="section"><div class="sectionTitle">Acciones administrativas pendientes</div>
+      ${mp.length?mp.map(x=>`<div class="pending"><div class="pendingTop"><div><div class="title">${esc(x[0])}</div><div class="why">${esc(x[1])}</div></div><span class="priority ${x[2]==="ALTA"?"pHigh":"pMed"}">${esc(x[2])}</span></div></div>`).join(""):'<div class="alert info">No hay pendientes manuales detectados por las reglas actuales.</div>'}
+      </div>
+    </div>
+    <div class="pane" id="pane-data">
+      <div class="section"><div class="sectionTitle">Recursos operativos</div>
+        <div class="grid2">
+          <div class="field">
+            <div class="k">Carpeta personal del pasante / miembro</div>
+            <div class="v">${p.plannerFolderUrl?"Enlace registrado":"Pendiente de registrar"}</div>
+            <div class="hint" style="margin-top:5px">Debe apuntar a la carpeta personal donde se encuentra el Planner y, cuando corresponda, las evidencias asociadas.</div>
+            <div style="margin-top:8px">${p.plannerFolderUrl?`<a class="btn soft" href="${esc(p.plannerFolderUrl)}" target="_blank" rel="noopener">Abrir carpeta</a>`:`<button class="btn" disabled>Registrar enlace en versión operativa</button>`}</div>
+          </div>
+          <div class="field">
+            <div class="k">Planner</div>
+            <div class="v">${p.plannerFolderUrl?"Se localiza dentro de la carpeta":"Sin carpeta vinculada"}</div>
+            <div class="hint" style="margin-top:5px">El Planner se crea/configura manualmente. El sistema usa el enlace de la carpeta para localizarlo y procesarlo.</div>
+          </div>
+          <div class="field">
+            <div class="k">Horario oficial</div>
+            <div class="v">${p.officialSchedule&&p.officialSchedule.existe?`${p.officialSchedule.cantidad} versión(es)`:"Sin H1/H2/H3 registrado"}</div>
+            <div class="hint" style="margin-top:5px">${p.officialSchedule&&p.officialSchedule.vigente?`Vigente: ${esc(p.officialSchedule.vigente.version||"Horario")} · desde ${fmtDate(p.officialSchedule.vigente.fechaInicio)}`:""}</div>
+          </div>
+          <div class="field">
+            <div class="k">Disponibilidad semanal declarada</div>
+            <div class="v">${p.declaredWeeklyHours==null?"—":fmtNum(p.declaredWeeklyHours)+" h/semana"}</div>
+            <div class="hint" style="margin-top:5px">Proviene del horario de postulación. No equivale a las horas objetivo.</div>
+          </div>
+          <div class="field" style="grid-column:1/-1">
+            <div class="k">Control de coherencia del compromiso</div>
+            ${(()=>{const c=coherenceCheck(p);return `<div class="coherence ${c.status==="good"?"good":c.status==="warn"?"warn":""}">${esc(c.text)}</div>`})()}
+          </div>
+        </div>
+      </div>
+      <div class="section"><div class="sectionTitle">Datos administrativos de la pasantía</div>
+        <div class="grid3">
+          <div class="field ${ownerValidation(p).valid?"":"invalidField"}"><div class="k">Encargado</div><div class="v">${esc(p.owner||"—")}</div>${ownerValidation(p).valid?"":'<div class="catalogWarn">Valor no reconocido. Debe corregirse desde una opción del catálogo.</div>'}</div>
+          <div class="field ${componentValidation(p).invalid.length?"invalidField":""}">
+            <div class="k">Componentes</div>
+            <div class="catalogTags">${[p.component1,p.component2].filter(Boolean).map(v=>tagHTML(v,!!canonicalValue(v,componentCatalog()))).join("")||tagHTML("",true,"Sin componente")}</div>
+            ${componentValidation(p).invalid.length?`<div class="catalogWarn">No se acepta texto libre cuando no coincide con el catálogo. Ejemplo: “Datos y Evalución” se marcará como pendiente hasta reemplazarlo por “Datos y Evaluación”.</div>`:""}
+          </div>
+          <div class="field"><div class="k">Horas pactadas</div><div class="v">${p.target==null?"Sin meta oficial":fmtNum(p.target)}</div></div>
+          <div class="field"><div class="k">Inicio</div><div class="v">${fmtDate(p.start)}</div></div>
+          <div class="field"><div class="k">Fin</div><div class="v">${fmtDate(p.end)}</div></div>
+          <div class="field"><div class="k">Horas válidas</div><div class="v">${fmtNum(p.hours)} h</div></div>
+          <div class="field"><div class="k">Horas restantes</div><div class="v">${fmtNum(p.remaining)}</div></div>
+          <div class="field"><div class="k">Cumplimiento horas</div><div class="v">${p.pctHours==null?"Sin meta":fmtNum(p.pctHours)+"%"}</div></div>
+          <div class="field"><div class="k">Extensión</div><div class="v">${p.extension?"Sí":"No"}</div></div>
+        </div>
+      </div>
+      <div class="section"><div class="sectionTitle">Catálogos y etiquetas válidas</div>
+        <div class="grid2">
+          <div class="field">
+            <div class="k">Componentes disponibles · catálogo ampliable</div>
+            <div class="catalogTags">${componentCatalog().map(v=>tagHTML(v,true)).join("")}</div>
+            <div class="hint" style="margin-top:6px">Los componentes pueden aumentar en el futuro. Se agregan al catálogo una sola vez y luego se seleccionan; no se escriben libremente en cada persona.</div>
+          </div>
+          <div class="field">
+            <div class="k">Clasificaciones fijas</div>
+            <div class="hint">Ruta de ingreso: ${FIXED_ROUTE_VALUES.map(esc).join(" · ")}</div>
+            <div class="hint" style="margin-top:5px">Cualidad actual: ${FIXED_CUALIDAD_VALUES.map(esc).join(" · ")}</div>
+            <div class="hint" style="margin-top:6px">Estas opciones no se amplían desde una ficha individual. Si cambia la política institucional, se modifica el catálogo del sistema de forma controlada.</div>
+          </div>
+        </div>
+      </div>
+      <div class="section"><div class="sectionTitle">Transición laboral</div>
+        <div class="grid3">
+          <div class="field"><div class="k">Estado transición</div><div class="v">${esc((p.transition&&p.transition.estado)||"—")}</div></div>
+          <div class="field"><div class="k">Inicio transición</div><div class="v">${fmtDate(p.transition&&p.transition.fechaInicio)}</div></div>
+          <div class="field"><div class="k">Estado vínculo laboral</div><div class="v">${esc((p.transition&&p.transition.estadoVinculo)||"—")}</div></div>
+          <div class="field"><div class="k">Fin vínculo laboral</div><div class="v">${fmtDate(p.transition&&p.transition.fechaFinVinculo)}</div></div>
+          <div class="field" style="grid-column:span 2"><div class="k">Observación</div><div class="v">${esc((p.transition&&p.transition.observacion)||"—")}</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="pane" id="pane-periods">${periodsHTML(p)}</div>
+    <div class="pane" id="pane-reports">${reportsHTML(p)}</div>
+    <div class="pane" id="pane-help">${helpHTML()}</div>
+  `;
+  document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+    document.querySelectorAll(".pane").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");
+    document.getElementById("pane-"+b.dataset.tab).classList.add("active");
+  });
+  renderPersonActions(p);
+  wirePeriodReportActions(p);
+}
+function coursesHTML(p){
+  const rows=Array.isArray(p.courseDetail)?p.courseDetail:[];
+  const inicio=p.courseStart?fmtDate(p.courseStart):"Pendiente de registrar";
+  const limite=p.courseDeadline?fmtDate(p.courseDeadline):"Se calcula 14 días después del envío";
+  const finalizo=p.courseCompleted?fmtDate(p.courseCompleted):"Aún no completó 5/5";
+  const cabecera=`<div class="section">
+    <div class="sectionTitle">Cursos de inducción</div>
+    <div class="alert info"><b>Regla:</b> son 5 cursos. La nota mínima configurada es 70 (70 o más = aprobado). El plazo es de 14 días calendario desde que la persona administradora registra que envió los correos/enlaces de los cursos.</div>
+    <div class="grid3" style="margin-top:7px">
+      <div class="field"><div class="k">Inicio del plazo</div><div class="v">${esc(inicio)}</div></div>
+      <div class="field"><div class="k">Fecha límite</div><div class="v">${esc(limite)}</div></div>
+      <div class="field"><div class="k">Cursos completados</div><div class="v">${esc(finalizo)}</div></div>
+    </div>
+    <div class="hint" style="margin-top:7px">La fecha de finalización se obtiene del último curso aprobado únicamente cuando los 5 cursos requeridos ya están aprobados.</div>`;
+  if(!rows.length){
+    return `${cabecera}<div class="alert info" style="margin-top:7px">Todavía no hay detalle de cursos para esta persona.</div></div>`;
+  }
+  return `${cabecera}
+    ${rows.map(c=>`<div class="course">
+      <div class="courseHead"><span>${esc(c.curso||"Curso")}</span><span class="badge ${cls(c.estado)}">${esc(c.estado||"—")}</span></div>
+      <div class="s">Nota: ${fmtNum(c.nota)} · Intentos detectados: ${fmtNum(c.intentosDetectados)}${c.fechaIntento?` · Fecha del intento: ${fmtDate(c.fechaIntento)}`:""}${c.alerta?` · Alerta: ${esc(c.alerta)}`:""}</div>
+    </div>`).join("")}
+  </div>`;
+}
+function docsHTML(p){
+  const docs=Array.isArray(p.docs)?p.docs:[];
+  const dc=docCounts(p);
+  if(!docs.length){
+    return `<div class="section"><div class="sectionTitle">Control de documentación física</div><div class="alert info">No existen registros de documentación física para esta etapa/persona.</div></div>`;
+  }
+  return `<div class="section">
+    <div class="sectionTitle">Control de documentación física</div>
+    <div class="docsummary">
+      <div class="box"><div class="n">${dc.total}</div><div class="l">Aplicables</div></div>
+      <div class="box"><div class="n">${dc.complete}</div><div class="l">Completados/recibidos</div></div>
+      <div class="box"><div class="n">${dc.pending}</div><div class="l">Pendientes</div></div>
+      <div class="box"><div class="n">${dc.pct??0}%</div><div class="l">Cumplimiento</div></div>
+    </div>
+    ${docs.map(d=>`<div class="docrow" style="grid-template-columns:minmax(220px,1.7fr) auto">
+      <div><div class="docname">${esc(d[0])}</div><div class="docnote">${esc(d[2]||"")}</div></div>
+      <span class="badge ${cls(d[1])}">${esc(d[1])}</span>
+    </div>`).join("")}
+    <div class="alert info"><b>Edición controlada:</b> usa “Actualizar documento” en la barra de acciones. El backend debe releer la persona después de guardar y devolver verificación.</div>
+  </div>`;
+}
+function periodsHTML(p){
+  const rows=Array.isArray(p.periods)?p.periods:[];
+  if(!rows.length){
+    return `<div class="section"><div class="sectionTitle">Períodos</div><div class="alert info">No existen períodos registrados para esta persona.</div></div>`;
+  }
+  return `<div class="section">
+    <div class="sectionTitle">Períodos de seguimiento</div>
+    ${rows.map((r,i)=>{
+      const estado=r.estadoPantalla||r.estado||"";
+      const rev=r.revision||{};
+      const needs=!!r.requiereRevision;
+      const reason=r.tipoRevision==="REVISION_FINAL"
+        ? "Último período formal: requiere revisión humana antes del cierre."
+        : (needs?"El motor dejó este período pendiente porque requiere resolver/revisar una excepción.":"");
+      const proposal=rev.horasFinalesPropuestas!=null?` · Propuesta: ${fmtNum(rev.horasFinalesPropuestas)} h`:"";
+      return `<div class="pending">
+        <div class="pendingTop">
+          <div>
+            <div class="title">${esc([r.tipo,r.periodo].filter(Boolean).join(" · ")||"Período")}</div>
+            <div class="why">${fmtDate(r.fechaInicio)} – ${fmtDate(r.fechaFin)} · ${esc(estado)}${r.horasFinales!=null?` · Horas finales: ${fmtNum(r.horasFinales)}`:""}${proposal}</div>
+            ${reason?`<div class="why"><b>${esc(reason)}</b></div>`:""}
+            ${rev.bloqueos&&rev.bloqueos.length?`<div class="why">Bloqueos: ${esc(rev.bloqueos.join(", "))}</div>`:""}
+            ${rev.alertas&&rev.alertas.length?`<div class="why">Alertas: ${esc(rev.alertas.join(", "))}</div>`:""}
+          </div>
+          <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end">
+            <span class="badge ${cls(estado)}">${esc(estado||"—")}</span>
+            ${needs?`<button class="btn amber" data-period-review="${i}">Revisar / cerrar</button>`:""}
+          </div>
+        </div>
+      </div>`;
+    }).join("")}
+    <div class="alert info"><b>Automatización:</b> los períodos intermedios sin bloqueos se cierran automáticamente y congelan sus snapshots. La intervención humana queda reservada para excepciones y para el último período formal.</div>
+  </div>`;
+}
+function reportsHTML(p){
+  const reports=Array.isArray(p.reports)?p.reports:[];
+  return `<div class="section">
+    <div class="sectionTitle">Informes de seguimiento</div>
+    <div class="grid2">
+      <div class="field">
+        <div class="k">Carpeta individual</div>
+        <div class="v">${p.reportFolderUrl?"Disponible":"Sin vínculo registrado"}</div>
+        <div style="margin-top:7px">${p.reportFolderUrl?`<a class="btn soft" href="${esc(p.reportFolderUrl)}" target="_blank" rel="noopener">Abrir carpeta</a>`:`<button class="btn" disabled>Carpeta no disponible</button>`}</div>
+      </div>
+      <div class="field">
+        <div class="k">Registros de informes</div>
+        <div class="v">${reports.length}</div>
+        <div class="small">Se generan automáticamente al cerrarse un período elegible.</div>
+      </div>
+    </div>
+    ${reports.length?`<div style="margin-top:9px">${reports.map((r,i)=>`<div class="pending">
+      <div class="pendingTop">
+        <div>
+          <div class="title">${esc([r.tipoInforme,r.tipoPeriodo,r.periodo].filter(Boolean).join(" · ")||"Informe")}</div>
+          <div class="why">${esc(r.estadoInforme||r.estadoDatos||"")}${r.version!=null?` · v${fmtNum(r.version)}`:""}${r.fechaGeneracion?` · ${fmtDate(r.fechaGeneracion)}`:""}</div>
+          ${r.observacion?`<div class="why">${esc(r.observacion)}</div>`:""}
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
+          ${r.urlGoogleDoc?`<a class="btn soft" href="${esc(r.urlGoogleDoc)}" target="_blank" rel="noopener">Abrir</a>`:`<span class="badge gray">Sin documento</span>`}
+          ${r.urlPdf?`<a class="btn" href="${esc(r.urlPdf)}" target="_blank" rel="noopener">Descargar PDF</a>`:""}
+          <button class="btn amber" data-report-regenerate="${i}">${r.urlGoogleDoc?"Generar nueva versión":"Generar ahora"}</button>
+        </div>
+      </div>
+    </div>`).join("")}</div>`:`<div class="alert info">No existen informes registrados para esta persona. Los registros aparecerán cuando exista un período cerrado elegible.</div>`}
+    <div class="alert info"><b>Versionado:</b> generar una nueva versión no elimina el documento anterior; el historial permanece en Drive.</div>
+  </div>`;
+}
+function wirePeriodReportActions(p){
+  document.querySelectorAll("[data-period-review]").forEach(btn=>{
+    btn.onclick=()=>{
+      const r=(p.periods||[])[Number(btn.dataset.periodReview)];
+      if(r)openActionModal("periodReview",p,r);
+    };
+  });
+  document.querySelectorAll("[data-report-regenerate]").forEach(btn=>{
+    btn.onclick=async()=>{
+      const r=(p.reports||[])[Number(btn.dataset.reportRegenerate)];
+      if(!r)return;
+      btn.disabled=true;
+      const old=btn.textContent;
+      btn.textContent="Generando…";
+      try{
+        const result=await apiAction("regenerar_informe_periodo",p.mail,{tipoPeriodo:r.tipoPeriodo,periodo:r.periodo});
+        if(result&&result.ok===false)throw new Error(result.message||"No se pudo generar el informe.");
+        await loadRealData();
+      }catch(e){
+        window.alert("No se pudo generar el informe: "+(e.message||String(e)));
+      }finally{
+        btn.disabled=false;
+        btn.textContent=old;
+      }
+    };
+  });
+}
+
+
+function helpHTML(){
+  return `<div class="learnIntro">
+    <h3>Guía operativa del sistema</h3>
+    <p>Este módulo centraliza el seguimiento de postulaciones, inducción, formalización, ejecución y cierre. La interfaz separa las tareas que requieren una decisión humana de los cálculos o sincronizaciones que pueden ejecutarse automáticamente. Está diseñado para integrarse como módulo dentro de una plataforma web autenticada de la organización.</p>
+  </div>
+
+  <div class="manualAuto">
+    <div class="box">
+      <h4>Procesos automatizables</h4>
+      <p>Recepción de postulaciones, vinculación del horario provisional, avisos internos, lectura de resultados de cursos, sincronización de Planner y asistencia, cálculo de progreso, construcción de períodos y actualización del estado de informes.</p>
+    </div>
+    <div class="box">
+      <h4>Controles humanos</h4>
+      <p>Entrevista y decisión de ingreso, envío de enlaces de inducción, revisión documental, registro de las condiciones formales, creación de recursos personales, revisión y cierre de períodos, extensiones, retiros y transición a una relación laboral.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sectionTitle">Datos controlados</div>
+    <div class="alert info"><b>Los campos administrativos sensibles a errores de escritura usan catálogos.</b> Componentes, ruta de ingreso, cualidad, estados documentales y resultados deben guardarse con valores canónicos.</div>
+    <p class="small"><b>Componentes:</b> el repositorio usa ejemplos genéricos. En una implementación real, el catálogo se mantiene en la fuente administrativa y puede ampliarse sin modificar la lógica del portal.</p>
+    <p class="small"><b>Corrección de datos:</b> un valor histórico mal escrito se corrige contra el catálogo; no debe crearse un componente nuevo para resolver un error ortográfico.</p>
+  </div>
+
+  <div class="section">
+    <div class="sectionTitle">Rutas de incorporación</div>
+    <div class="flowHelp">
+      <div class="stepHelp"><b>Pasantía estándar</b><p>Postulación, entrevista, inducción, formalización, ejecución, seguimiento y cierre de una pasantía.</p></div>
+      <div class="stepHelp"><b>Pasantía con posible transición laboral</b><p>Se gestiona como pasantía mientras corresponda y luego registra una decisión de transición. No implica ni garantiza contratación.</p></div>
+      <div class="stepHelp"><b>Incorporación directa</b><p>Ruta separada para personas que ingresan por otro proceso administrativo. No debe fabricarse historial de pasantía si esa etapa no existió.</p></div>
+      <div class="stepHelp"><b>Fuente de postulación</b><p>Puede ser un formulario, portal, sistema administrativo o API que entregue datos estructurados al flujo de ingreso.</p></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sectionTitle">Flujo completo · paso a paso</div>
+    <div class="learnFlow">
+      <div class="learnStep"><div class="num">1</div><div>
+        <h4>Postulación y horario provisional</h4>
+        <p>La persona completa la postulación y registra su disponibilidad semanal. La página de horarios estandariza esa disponibilidad, calcula las horas semanales y genera un PDF con un código de referencia.</p>
+        <div class="where"><b>Regla:</b> una postulación todavía no representa una pasantía activa.</div>
+      </div></div>
+
+      <div class="learnStep"><div class="num">2</div><div>
+        <h4>Revisión y entrevista</h4>
+        <p>El equipo revisa la información recibida, coordina la entrevista y registra fecha, responsable, resultado y observaciones.</p>
+        <p>Una decisión negativa cierra el proceso. Una decisión positiva habilita la etapa de inducción.</p>
+      </div></div>
+
+      <div class="learnStep"><div class="num">3</div><div>
+        <h4>Inducción y plazo</h4>
+        <p>Los enlaces o instrucciones de los cursos se envían manualmente. Al registrar la fecha real de envío comienza el plazo administrativo de <b>14 días calendario</b>.</p>
+        <p>La implementación de referencia requiere <b>5 cursos</b>. La regla técnica actual considera aprobado un resultado de <b>70 o más</b>. Las notas se leen desde su fuente y no deben editarse manualmente en el resumen de control.</p>
+      </div></div>
+
+      <div class="learnStep"><div class="num">4</div><div>
+        <h4>Formalización</h4>
+        <p>Cuando los requisitos de inducción están completos, se revisa el checklist documental y se registran las condiciones formales: responsable, componente(s), fechas de inicio/fin y horas objetivo.</p>
+        <p><b>Las horas objetivo no se infieren del horario semanal.</b> Son el total formal acordado para el compromiso.</p>
+      </div></div>
+
+      <div class="learnStep"><div class="num">5</div><div>
+        <h4>Recursos operativos y horario oficial</h4>
+        <p>La organización crea la carpeta personal y el Planner según su procedimiento interno. En este proyecto, <b>Planner</b> significa el registro de tareas/actividades, tiempo y evidencia de la persona; no implica una dependencia de Microsoft Planner. El sistema guarda la URL de la carpeta personal y localiza ese registro dentro de ella.</p>
+        <p>El primer horario oficial (H1) se conserva como versión inicial. Si el horario cambia posteriormente, las versiones anteriores no deben borrarse.</p>
+      </div></div>
+
+      <div class="learnStep"><div class="num">6</div><div>
+        <h4>Seguimiento de la ejecución</h4>
+        <p>Planner, evidencia, asistencia y horario se combinan para obtener indicadores de progreso. Los cálculos derivados no deben editarse manualmente.</p>
+      </div></div>
+
+      <div class="learnStep"><div class="num">7</div><div>
+        <h4>Períodos de seguimiento</h4>
+        <p>Los períodos se construyen en bloques de <b>30 días calendario</b>. Los períodos intermedios elegibles se cierran automáticamente y congelan sus snapshots; si existe un bloqueo, el caso queda visible para revisión.</p>
+        <p>El último período formal se reserva para <b>revisión humana final</b> desde la interfaz administrativa.</p>
+      </div></div>
+
+      <div class="learnStep"><div class="num">8</div><div>
+        <h4>Informes y cierre</h4>
+        <p>Los períodos cerrados alimentan el registro de informes y los reportes periódicos se generan automáticamente cuando los datos están listos. Desde la interfaz pueden abrirse, descargarse en PDF y regenerarse de forma versionada.</p>
+        <p>Un módulo completo de evaluación/informe final institucional se mantiene como trabajo futuro hasta que sea definido y validado.</p>
+        <p>La culminación, extensión, retiro o transición laboral se registra explícitamente para conservar la trayectoria de la persona.</p>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="section" style="margin-top:10px">
+    <div class="sectionTitle">Controles que no deben automatizarse sin validación</div>
+    <div class="schema"><div style="font-size:9px;line-height:1.6">
+      • No crear una persona operativa antes de una aceptación registrada.<br>
+      • No editar manualmente notas procesadas, horas de Planner, asistencia o porcentajes derivados.<br>
+      • No inferir horas objetivo desde la disponibilidad semanal.<br>
+      • No cerrar automáticamente el último período formal ni una excepción bloqueada.<br>
+      • No sobrescribir versiones anteriores de horarios oficiales.<br>
+      • No mezclar la ruta de pasantía con la ruta de incorporación directa de personal.
+    </div></div>
+  </div>
+
+  <div class="section" style="margin-top:10px">
+    <div class="sectionTitle">Referencia técnica</div>
+    <div class="alert info">Los libros de ejemplo incluidos en el repositorio documentan las hojas y relaciones principales con datos ficticios. La autenticación, autorización y escritura deben ser proporcionadas por el sistema anfitrión; la interfaz pública no incluye credenciales ni datos reales. La evolución recomendada es integrarla dentro de una plataforma web propia de la organización.</div>
+  </div>`;
+}
+
+const DEFAULT_CONFIG={
+  apiBaseUrl:"",
+  credentials:"include",
+  headers:{}
+};
+function mvpConfig(){
+  return Object.assign({},DEFAULT_CONFIG,window.INTERNSHIP_MGMT_CONFIG||{});
+}
+function hasInjectedApi(){
+  return !!(window.INTERNSHIP_MGMT_API && typeof window.INTERNSHIP_MGMT_API.getGestion==="function");
+}
+function baseUrl(){
+  return String(mvpConfig().apiBaseUrl||"").replace(/\/+$/,"");
+}
+function updateApiStatus(ok,text){
+  const dot=$("apiDot"),label=$("apiStatusText");
+  if(dot)dot.classList.toggle("ok",!!ok);
+  if(label)label.textContent=text|| (ok?"API conectada":"API pendiente de integración");
+}
+async function apiGetGestion(){
+  if(hasInjectedApi())return await window.INTERNSHIP_MGMT_API.getGestion();
+  const base=baseUrl();
+  if(!base)throw new Error("Falta integrar la API. Define window.INTERNSHIP_MGMT_API o INTERNSHIP_MGMT_CONFIG.apiBaseUrl.");
+  const c=mvpConfig();
+  const r=await fetch(base+"/gestion",{method:"GET",credentials:c.credentials,headers:Object.assign({"Accept":"application/json"},c.headers||{})});
+  if(!r.ok)throw new Error("API gestión respondió HTTP "+r.status);
+  return await r.json();
+}
+async function apiAction(action,correo,payload){
+  if(window.INTERNSHIP_MGMT_API && typeof window.INTERNSHIP_MGMT_API.executeAction==="function"){
+    return await window.INTERNSHIP_MGMT_API.executeAction({action,correo,payload});
+  }
+  const base=baseUrl();
+  if(!base)throw new Error("La escritura requiere que el sistema mayor conecte el adaptador/API.");
+  const c=mvpConfig();
+  const r=await fetch(base+"/accion",{
+    method:"POST",
+    credentials:c.credentials,
+    headers:Object.assign({"Accept":"application/json","Content-Type":"application/json"},c.headers||{}),
+    body:JSON.stringify({action,correo,payload})
+  });
+  const data=await r.json().catch(()=>({}));
+  if(!r.ok||data.ok===false)throw new Error(data.message||("API acción respondió HTTP "+r.status));
+  return data;
+}
+function selectedPerson(){
+  const arr=currentData();
+  return arr[selected]||null;
+}
+function isoDate(d){
+  if(!d)return"";
+  const x=new Date(d);
+  if(isNaN(x))return"";
+  return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,"0")}-${String(x.getDate()).padStart(2,"0")}`;
+}
+function addDaysIso(v,days){
+  if(!v)return"";
+  const d=new Date(v+"T12:00:00");
+  d.setDate(d.getDate()+days);
+  return isoDate(d);
+}
+
+function val(id){return ($(id)||{}).value||""}
+function formField(label,id,type="text",value="",extra=""){
+  return `<div class="formrow"><label for="${id}">${esc(label)}</label><input id="${id}" type="${type}" value="${esc(value||"")}" ${extra}></div>`;
+}
+function selectField(label,id,options,current=""){
+  const canon=canonicalValue(current,options)||"";
+  return `<div class="formrow"><label for="${id}">${esc(label)}</label><select id="${id}">${options.map(o=>`<option value="${esc(o)}" ${o===canon?"selected":""}>${esc(o||"Seleccionar")}</option>`).join("")}</select>${current&&!canon?`<div class="catalogWarn">Valor actual no reconocido: <b>${esc(current)}</b>. Selecciona la opción correcta para reemplazarlo.</div>`:""}</div>`;
+}
+function selectPairsField(label,id,pairs,current=""){
+  const currentKey=normControlled(current);
+  return `<div class="formrow"><label for="${id}">${esc(label)}</label><select id="${id}">${pairs.map(x=>`<option value="${esc(x[0])}" ${normControlled(x[0])===currentKey?"selected":""}>${esc(x[1])}</option>`).join("")}</select></div>`;
+}
+function componentSelectField(label,id,current=""){
+  const opts=[""].concat(componentCatalog());
+  return selectField(label,id,opts,current);
+}
+
+let ACTION_CTX={type:"",person:null,meta:null};
+function openActionModal(type,p,meta=null){
+  ACTION_CTX={type,person:p,meta};
+  $("actionModal").classList.add("open");
+  $("actionPerson").textContent=`${p.name||""} · ${p.mail||""}`;
+  $("actionState").textContent="";
+  $("actionCopy").style.display="none";
+  $("actionSave").style.display="inline-block";
+  const docs=(p.docRaw||[]);
+  let title="",body="";
+  if(type==="interview"){
+    title="Registrar entrevista";
+    body=`<div class="formgrid">
+      ${formField("Fecha de entrevista","f_date","date",p.interviewDate?String(p.interviewDate).slice(0,10):"")}
+      ${formField("Entrevistador/a","f_interviewer","text",p.interviewer||"")}
+      ${selectField("Resultado","f_result",["","Aceptado","Rechazado"],p.decision||"")}
+      ${formField("Observación","f_obs","text","")}
+    </div>`;
+  }else if(type==="courses"){
+    title="Registrar envío manual de cursos";
+    const start=p.courseStart?String(p.courseStart).slice(0,10):isoDate(new Date());
+    body=`<div class="alert warn"><b>Antes de registrar esta fecha:</b> envía manualmente el correo de cursos de inducción. La página no genera ni envía ese correo.</div>
+    <div class="formgrid">
+      ${formField("Fecha real de envío del correo","f_start","date",start)}
+      <div class="formrow"><label>Fecha límite calculada</label><input id="f_deadline" value="${esc(addDaysIso(start,14))}" readonly></div>
+    </div>
+    <div class="alert info">Esta fecha inicia el plazo administrativo de 14 días. Las notas de cursos siguen siendo automáticas.</div>`;
+    setTimeout(()=>{$("f_start").onchange=()=>{$("f_deadline").value=addDaysIso(val("f_start"),14)}},0);
+  }else if(type==="formalization"){
+    title="Registrar formalización";
+    const owners=ownerCatalog();
+    body=`<div class="formgrid">
+      ${owners.length?selectField("Encargado","f_owner",[""].concat(owners),p.owner||""):formField("Encargado","f_owner","text",p.owner||"")}
+      ${componentSelectField("Componente 1","f_comp1",p.component1||"")}
+      ${componentSelectField("Componente 2","f_comp2",p.component2||"")}
+      <div class="formrow full">
+        <label>Catálogo de componentes</label>
+        <div class="catalogTags">${componentCatalog().map(v=>tagHTML(v,true)).join("")}</div>
+        <div class="catalogTools"><button class="btn" type="button" id="addComponentBtn">+ Agregar nuevo componente</button><span class="small">Solo para un componente real nuevo. No usar para corregir un error de escritura.</span></div>
+      </div>
+      ${formField("Fecha inicio compromiso","f_start","date",p.start?String(p.start).slice(0,10):"")}
+      ${formField("Fecha fin compromiso","f_end","date",p.end?String(p.end).slice(0,10):"")}
+      ${formField("Horas objetivo totales","f_target","number",p.target??"",'min="0" step="0.25"')}
+    </div>
+    <div class="alert warn">Los componentes se seleccionan de una lista. Si un dato histórico no coincide con el catálogo, selecciona el valor canónico y guarda para reemplazarlo. Copia fechas y horas exactamente del compromiso firmado.</div>`;
+    setTimeout(()=>{const b=$("addComponentBtn");if(b)b.onclick=()=>addComponentCatalog(p)},0);
+  }else if(type==="classification"){
+    title="Corregir clasificación administrativa";
+    body=`<div class="formgrid">
+      ${selectPairsField("Ruta de ingreso","f_route",[
+        ["","Seleccionar"],
+        ["PASANTÍA ESTÁNDAR","Pasante estándar"],
+        ["PASANTÍA TRANSITORIA A CONTRATACIÓN","Pasantía con posible transición laboral"],
+        ["ASISTENTE DIRECTO","Miembro / asistente directo"]
+      ],p.route||"")}
+      ${selectPairsField("Cualidad actual","f_quality",[
+        ["","Seleccionar"],
+        ["PASANTE","Pasante"],
+        ["ASISTENTE","Asistente"]
+      ],p.cualidadActual||"")}
+    </div>
+    <div class="alert info">Estas variables usan opciones fijas para evitar variantes de escritura. Cambiar la ruta a “ASISTENTE DIRECTO” implica una ruta separada del flujo estándar de pasantías y debe hacerse solo si corresponde administrativamente.</div>`;
+  }else if(type==="document"){
+    title="Actualizar documento / control";
+    body=`<div class="formgrid">
+      ${selectField("Documento / control","f_doc",[""].concat(docs.map(d=>d.codigo||d.documento||"")), "")}
+      ${selectField("Estado","f_docstate",["","PENDIENTE","RECIBIDO","VALIDADO","INCOMPLETO","NO_APLICA"],"")}
+      ${formField("Fecha recepción","f_received","date","")}
+      ${formField("Fecha validación","f_validated","date","")}
+      <div class="formrow full"><label>Observación</label><textarea id="f_obs"></textarea></div>
+    </div>`;
+  }else if(type==="folder"){
+    title="Registrar carpeta personal";
+    body=`<div class="formgrid"><div class="formrow full"><label>URL de la carpeta personal</label><input id="f_folder" type="url" value="${esc(p.plannerFolderUrl||"")}" placeholder="https://drive.google.com/drive/folders/..."></div></div>
+    <div class="alert info">La carpeta y el Planner se crean manualmente. Este enlace debe apuntar a la carpeta personal; el módulo de Planner localiza dentro de ella el archivo correspondiente.</div>`;
+  }else if(type==="extension"){
+    title="Registrar extensión";
+    body=`<div class="formgrid">
+      ${formField("Fecha inicio extensión","f_extstart","date",p.extensionStart?String(p.extensionStart).slice(0,10):"")}
+      ${formField("Fecha fin extensión","f_extend","date",p.extensionEnd?String(p.extensionEnd).slice(0,10):"")}
+      <div class="formrow full"><label>Observación</label><textarea id="f_obs"></textarea></div>
+    </div>`;
+  }else if(type==="withdrawal"){
+    title="Registrar retiro";
+    body=`<div class="formgrid">
+      ${formField("Fecha de retiro","f_withdraw","date","")}
+      <div class="formrow full"><label>Motivo / observación</label><textarea id="f_obs"></textarea></div>
+    </div>`;
+  }else if(type==="transition"){
+    title="Registrar transición laboral";
+    body=`<div class="formgrid">
+      ${selectField("Estado transición","f_transition",["","Pendiente","Contratado","No contratado","No aplica"],(p.transition&&p.transition.estado)||"")}
+      ${formField("Fecha inicio transición/contrato","f_transitionstart","date",(p.transition&&p.transition.fechaInicio)?String(p.transition.fechaInicio).slice(0,10):"")}
+      ${selectField("Estado vínculo laboral","f_linkstate",["","Vigente","Finalizado","No aplica"],(p.transition&&p.transition.estadoVinculo)||"")}
+      ${formField("Fecha fin vínculo","f_linkend","date",(p.transition&&p.transition.fechaFinVinculo)?String(p.transition.fechaFinVinculo).slice(0,10):"")}
+      <div class="formrow full"><label>Observación</label><textarea id="f_obs">${esc((p.transition&&p.transition.observacion)||"")}</textarea></div>
+    </div>`;
+  }else if(type==="periodReview"){
+    title="Revisar y cerrar período";
+    const r=meta||{};
+    const rev=r.revision||{};
+    const snap=rev.snapshot||{};
+    const extras=rev.horasAdicionalesAprobadas??r.horasExtrasAprobadas??0;
+    body=`<div class="alert ${r.tipoRevision==="REVISION_FINAL"?"warn":"info"}"><b>${r.tipoRevision==="REVISION_FINAL"?"Cierre formal final":"Revisión de excepción"}.</b> El sistema recalculará el diagnóstico antes de cerrar. Si persiste un bloqueo, la operación será rechazada sin consolidar el período.</div>
+    <div class="formgrid" style="margin-top:8px">
+      <div class="field"><div class="k">Período</div><div class="v">${esc([r.tipo,r.periodo].filter(Boolean).join(" · "))}</div></div>
+      <div class="field"><div class="k">Fechas</div><div class="v">${fmtDate(r.fechaInicio)} – ${fmtDate(r.fechaFin)}</div></div>
+      <div class="field"><div class="k">Planner elegible</div><div class="v">${fmtNum(snap.horasPlanner)} h</div></div>
+      <div class="field"><div class="k">Con evidencia</div><div class="v">${fmtNum(snap.horasEvidencia)} h</div></div>
+      <div class="field"><div class="k">Asistencia</div><div class="v">${fmtNum(snap.horasAsistencia)} h</div></div>
+      <div class="field"><div class="k">Dentro / fuera de horario</div><div class="v">${fmtNum(snap.horasDentroHorario)} / ${fmtNum(snap.horasFueraHorario)} h</div></div>
+      ${formField("Horas adicionales aprobadas","f_periodextras","number",extras,'min="0" step="0.25"')}
+      <div class="field"><div class="k">Horas finales propuestas</div><div class="v">${fmtNum(rev.horasFinalesPropuestas)} h</div></div>
+    </div>
+    ${rev.bloqueos&&rev.bloqueos.length?`<div class="alert danger">Bloqueos actuales: ${esc(rev.bloqueos.join(", "))}</div>`:""}
+    ${rev.alertas&&rev.alertas.length?`<div class="alert warn">Alertas: ${esc(rev.alertas.join(", "))}</div>`:""}
+    <div class="alert info">Al confirmar, se congelan los snapshots y el sistema intenta actualizar progreso, registrar el informe y generarlo. No es necesario ejecutar funciones manualmente en Apps Script.</div>`;
+  }else if(type==="letter"){
+    title="Registrar carta de culminación";
+    body=`<div class="formgrid">
+      ${selectField("Estado","f_letterstate",["","Pendiente","Preparada","Firmada","Entregada"],"")}
+      ${formField("Fecha de entrega","f_letterdate","date","")}
+      <div class="formrow full"><label>Observación</label><textarea id="f_obs"></textarea></div>
+    </div>
+    <div class="alert info">Flujo sugerido: revisión final → aprobación interna → preparación de la constancia/carta correspondiente → registro de entrega.</div>`;
+  }else{
+    title="Acción";
+    body='<div class="alert warn">Acción no configurada.</div>';
+  }
+  $("actionTitle").textContent=title;
+  $("actionBody").innerHTML=body;
+}
+
+async function addComponentCatalog(p){
+  const raw=window.prompt("Nombre oficial del nuevo componente:");
+  const nombre=String(raw||"").trim();
+  if(!nombre)return;
+  const existing=componentCatalog();
+  const duplicate=canonicalValue(nombre,existing);
+  if(duplicate){
+    $("actionState").textContent=`Ese componente ya existe como “${duplicate}”. Selecciónalo de la lista.`;
+    return;
+  }
+  $("actionState").textContent="Agregando componente al catálogo…";
+  try{
+    const result=await apiAction("crear_componente_catalogo","",{nombre});
+    if(result&&result.ok===false)throw new Error(result.message||"No se pudo crear el componente.");
+    DATA_META.catalogos=DATA_META.catalogos||{};
+    DATA_META.catalogos.componentes=uniqueCatalog([...(DATA_META.catalogos.componentes||DEFAULT_COMPONENTS),result.nombreCanonico||nombre]);
+    $("actionState").textContent="Componente agregado. Ya puede seleccionarse.";
+    openActionModal("formalization",p);
+  }catch(e){
+    $("actionState").textContent="Error: "+(e.message||String(e));
+  }
+}
+
+function closeActionModal(){
+  $("actionModal").classList.remove("open");
+}
+function actionPayload(type){
+  if(type==="interview")return {fecha:val("f_date"),entrevistador:val("f_interviewer"),resultado:val("f_result"),observacion:val("f_obs")};
+  if(type==="courses")return {fechaInicioPlazoCursos:val("f_start")};
+  if(type==="formalization")return {encargado:val("f_owner"),componente1:val("f_comp1"),componente2:val("f_comp2"),fechaInicio:val("f_start"),fechaFin:val("f_end"),horasObjetivo:val("f_target")===""?null:Number(val("f_target"))};
+  if(type==="classification")return {rutaIngreso:val("f_route"),cualidadActual:val("f_quality")};
+  if(type==="document")return {codigoDocumento:val("f_doc"),estado:val("f_docstate"),fechaRecepcion:val("f_received"),fechaValidacion:val("f_validated"),observacion:val("f_obs")};
+  if(type==="folder")return {linkPlanner:val("f_folder")};
+  if(type==="extension")return {fechaInicioExtension:val("f_extstart"),fechaFinExtension:val("f_extend"),observacion:val("f_obs")};
+  if(type==="withdrawal")return {fechaRetiro:val("f_withdraw"),observacion:val("f_obs")};
+  if(type==="transition")return {estadoTransicion:val("f_transition"),fechaInicioTransicion:val("f_transitionstart"),estadoVinculoLaboral:val("f_linkstate"),fechaFinVinculo:val("f_linkend"),observacion:val("f_obs")};
+  if(type==="periodReview")return {tipoPeriodo:(ACTION_CTX.meta||{}).tipo||"",periodo:(ACTION_CTX.meta||{}).periodo||"",horasAdicionalesAprobadas:val("f_periodextras")===""?0:Number(val("f_periodextras"))};
+  if(type==="letter")return {estadoCarta:val("f_letterstate"),fechaEntrega:val("f_letterdate"),observacion:val("f_obs")};
+  return {};
+}
+const ACTION_MAP={
+  interview:"registrar_entrevista",
+  courses:"registrar_envio_cursos",
+  formalization:"guardar_formalizacion",
+  classification:"guardar_clasificacion",
+  document:"actualizar_documento",
+  folder:"guardar_carpeta_personal",
+  extension:"registrar_extension",
+  withdrawal:"registrar_retiro",
+  transition:"registrar_transicion_laboral",
+  periodReview:"cerrar_periodo_revisado",
+  letter:"registrar_carta_culminacion"
+};
+async function saveCurrentAction(){
+  const {type,person}=ACTION_CTX;
+  if(!person)return;
+  if(type==="formalization"){
+    const c1=val("f_comp1"),c2=val("f_comp2");
+    if(!c1&&!c2){$("actionState").textContent="Selecciona al menos un componente.";return}
+    if(c1&&!canonicalValue(c1,componentCatalog())){$("actionState").textContent="Componente 1 no válido.";return}
+    if(c2&&!canonicalValue(c2,componentCatalog())){$("actionState").textContent="Componente 2 no válido.";return}
+    if(c1&&c2&&normControlled(c1)===normControlled(c2)){$("actionState").textContent="Componente 1 y Componente 2 no pueden ser iguales.";return}
+  }
+  $("actionSave").disabled=true;
+  $("actionState").textContent="Guardando…";
+  try{
+    const result=await apiAction(ACTION_MAP[type],person.mail,actionPayload(type));
+    if(result && result.ok===false)throw new Error(result.message||"La API rechazó la operación.");
+    $("actionState").textContent=(result&&result.verificado===true)?"Guardado y verificado.":"Guardado. Releyendo la base…";
+    if(type==="periodReview"&&result&&Array.isArray(result.advertencias)&&result.advertencias.length){
+      window.alert("El período se cerró, pero hay advertencias:\n\n"+result.advertencias.join("\n"));
+    }
+    await loadRealData();
+    closeActionModal();
+  }catch(e){
+    $("actionState").textContent="Error: "+(e.message||String(e));
+  }finally{
+    $("actionSave").disabled=false;
+  }
+}
+
+async function loadRealData(){
+  const btn=$("refresh"),badge=$("modeBadge");
+  btn.disabled=true;
+  badge.textContent="CARGANDO DATOS...";
+  try{
+    const data=await apiGetGestion();
+    if(!data||!Array.isArray(data.pasantias))throw new Error("Respuesta de API inválida: falta pasantias[].");
+    DATA_META=data;
+    INTERNS=data.pasantias.map(adaptPerson);
+    LAST_ERROR="";
+    if(selected>=INTERNS.length)selected=0;
+    const hora=data.actualizado?String(data.actualizado).replace("T"," "):"sin marca";
+    badge.textContent=`DATOS REALES · ${INTERNS.length} PERSONAS · ${hora}`;
+    updateApiStatus(true,"API conectada");
+    render();
+  }catch(e){
+    LAST_ERROR=e.message||String(e);
+    INTERNS=[];
+    DATA_META={};
+    badge.textContent="INTEGRACIÓN PENDIENTE";
+    updateApiStatus(false,"API pendiente de integración");
+    render();
+    $("detail").innerHTML=`<div class="pane active"><div class="alert warn"><b>La interfaz está lista, pero todavía no está conectada al backend.</b><br>${esc(LAST_ERROR)}<br><br>El sistema mayor debe implementar el contrato descrito en CONTRATO_API_MVP.md.</div></div>`;
+  }finally{
+    btn.disabled=false;
+  }
+}
+
+$("helpContent").innerHTML=helpHTML();
+$("actionClose").onclick=closeActionModal;
+$("actionModal").onclick=e=>{if(e.target===$("actionModal"))closeActionModal()};
+$("actionSave").onclick=saveCurrentAction;
+$("actionCopy").style.display="none";
+document.querySelectorAll(".seg").forEach(b=>b.onclick=()=>{
+  MODE=b.dataset.mode;
+  selected=0;
+  render();
+});
+$("refresh").onclick=loadRealData;
+$("helpBtn").onclick=()=>$("helpModal").classList.add("open");
+window.closeHelp=()=>$("helpModal").classList.remove("open");
+$("search").oninput=()=>{selected=0;renderTable();renderDetail()};
+$("stageFilter").onchange=()=>{selected=0;renderTable();renderDetail()};
+
+render();
+loadRealData();
+</script>
+</body>
+</html>

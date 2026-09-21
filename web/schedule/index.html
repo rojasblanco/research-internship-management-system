@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<!-- Standardized application schedule form — public reference implementation -->
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="googlebot" content="noindex, nofollow, noarchive">
+  <!-- Set a canonical URL only in the deployment environment. -->
+
+  <title>Horario de postulación · Research Internship Management</title>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="config.js"></script>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoaded&render=explicit" defer></script>
+
+  <style>
+    :root {
+      --navy: #174777;
+      --navy-dark: #12385f;
+      --blue-soft: #edf5fc;
+      --line: #d9e4ee;
+      --text: #172b4d;
+      --muted: #607089;
+      --green: #087a45;
+      --amber: #9a6500;
+      --amber-bg: #fff7e6;
+      --red: #b42318;
+      --red-bg: #fff0ee;
+      --shadow: 0 18px 45px rgba(22, 71, 119, .12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f3f8fc;
+      color: var(--text);
+    }
+
+    .shell {
+      width: min(1180px, calc(100% - 28px));
+      margin: 28px auto 60px;
+    }
+
+    .hero {
+      padding: 34px 38px;
+      border-radius: 26px;
+      color: white;
+      background:
+        linear-gradient(
+          135deg,
+          var(--navy-dark),
+          var(--navy)
+        );
+      box-shadow: var(--shadow);
+    }
+
+    .hero h1 {
+      margin: 4px 0 12px;
+      font-size: clamp(30px, 4vw, 48px);
+      line-height: 1.05;
+    }
+
+    .hero p {
+      max-width: 780px;
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.65;
+      color: #eaf4ff;
+    }
+
+    .eyebrow {
+      font-size: 12px !important;
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: #c9def2 !important;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin: 22px 0;
+    }
+
+    .step {
+      padding: 17px 20px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: white;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .step.active {
+      color: var(--navy-dark);
+      background: var(--blue-soft);
+      border-color: #a9cbea;
+    }
+
+    .card {
+      margin-top: 18px;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .card-head {
+      padding: 26px 28px 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .card-head h2 {
+      margin: 0 0 8px;
+      font-size: 26px;
+      color: var(--navy-dark);
+    }
+
+    .card-head p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .card-body {
+      padding: 26px 28px 30px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: 700;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="time"] {
+      width: 100%;
+      padding: 14px 15px;
+      border: 1px solid #cbd8e5;
+      border-radius: 12px;
+      background: white;
+      color: var(--text);
+      font-size: 16px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #5e9bcf;
+      box-shadow: 0 0 0 3px rgba(94,155,207,.13);
+    }
+
+    .schedule-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+    }
+
+    th {
+      padding: 14px 10px;
+      background: var(--navy-dark);
+      color: white;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    td {
+      padding: 11px;
+      border-top: 1px solid var(--line);
+      text-align: center;
+    }
+
+    td.day {
+      text-align: left;
+      font-weight: 800;
+      color: var(--navy-dark);
+    }
+
+    .summary {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-top: 18px;
+      padding: 18px 20px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: #f8fbfe;
+    }
+
+    .hours {
+      color: var(--green);
+      font-size: 30px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .notice {
+      margin-top: 18px;
+      padding: 16px 18px;
+      border-left: 4px solid #e5a514;
+      border-radius: 12px;
+      background: var(--amber-bg);
+      color: #6c4c00;
+      line-height: 1.55;
+    }
+
+    .security-check {
+      margin-top: 18px;
+      padding: 16px 18px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #f8fbfe;
+    }
+
+    .security-check strong {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--navy-dark);
+    }
+
+    .security-help {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 14px 22px;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: var(--navy-dark);
+      color: white;
+    }
+
+    .btn-light {
+      background: #edf2f7;
+      color: var(--text);
+    }
+
+    .btn-green {
+      background: var(--green);
+      color: white;
+    }
+
+    .review {
+      display: none;
+      margin-top: 22px;
+      padding: 20px;
+      border: 1px solid #bcd6ec;
+      border-radius: 16px;
+      background: #f5faff;
+    }
+
+    .review.show {
+      display: block;
+    }
+
+    .check-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      margin-top: 18px;
+      font-weight: 600;
+      line-height: 1.45;
+    }
+
+    .status {
+      display: none;
+      margin-top: 18px;
+      padding: 16px 18px;
+      border-radius: 14px;
+      line-height: 1.5;
+    }
+
+    .status.show {
+      display: block;
+    }
+
+    .status.success {
+      background: #ecfdf3;
+      border: 1px solid #abefc6;
+      color: #05603a;
+    }
+
+    .status.error {
+      background: var(--red-bg);
+      border: 1px solid #f2b8b2;
+      color: var(--red);
+    }
+
+    .footer {
+      margin-top: 22px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    #pdf-template {
+      display: none;
+      width: 760px;
+      padding: 34px;
+      background: white;
+      color: #1f2937;
+    }
+
+    .pdf-head {
+      padding-bottom: 15px;
+      border-bottom: 3px solid var(--navy-dark);
+    }
+
+    .pdf-head h2 {
+      margin: 0;
+      color: var(--navy-dark);
+      font-size: 26px;
+    }
+
+    .pdf-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 24px;
+      margin: 22px 0;
+      font-size: 14px;
+    }
+
+    .pdf-code {
+      margin: 14px 0 18px;
+      padding: 12px 14px;
+      border: 1px solid #cbd8e5;
+      background: #f7fafc;
+      font-size: 13px;
+    }
+
+    .pdf-table {
+      min-width: 0;
+      font-size: 12px;
+    }
+
+    .pdf-table th,
+    .pdf-table td {
+      padding: 8px;
+    }
+
+    .pdf-total {
+      margin-top: 18px;
+      text-align: right;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .pdf-note {
+      margin-top: 24px;
+      color: #667085;
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 760px) {
+      .shell {
+        width: min(100% - 16px, 1180px);
+        margin-top: 12px;
+      }
+
+      .hero {
+        padding: 26px 22px;
+      }
+
+      .steps,
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+
+      .card-head,
+      .card-body {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .summary {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="shell">
+    <section class="hero">
+      <p class="eyebrow" id="programLabel">Programa de investigación</p>
+      <h1>Genera tu horario de postulación</h1>
+      <p>
+        Completa los días y horas en los que tendrías disponibilidad para realizar la pasantía.
+        Revisa el horario, genera tu PDF y entrégalo por el canal de postulación indicado.
+      </p>
+    </section>
+
+    <div class="steps">
+      <div class="step active" id="step1">1. Tus datos</div>
+      <div class="step" id="step2">2. Tu horario</div>
+      <div class="step" id="step3">3. Revisar y descargar</div>
+    </div>
+
+    <section class="card">
+      <div class="card-head">
+        <h2>1. Identificación</h2>
+        <p>
+          Usa el mismo correo registrado en tu postulación.
+          Si luego necesitas corregir este horario, puedes generar otro PDF y entregar únicamente el que decidas utilizar.
+        </p>
+      </div>
+
+      <div class="card-body">
+        <div class="grid-2">
+          <div>
+            <label for="correo">Correo electrónico *</label>
+            <input id="correo" type="email" autocomplete="email" placeholder="person@example.org">
+          </div>
+
+          <div>
+            <label for="nombre">Nombre completo *</label>
+            <input id="nombre" type="text" autocomplete="name" placeholder="Nombre y apellidos">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-head">
+        <h2>2. Horario semanal</h2>
+        <p>
+          Puedes dejar un día completamente vacío. Si utilizas un turno, la entrada y la salida deben estar completas.
+        </p>
+      </div>
+
+      <div class="card-body">
+        <div class="schedule-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Día</th>
+                <th>Entrada 1</th>
+                <th>Salida 1</th>
+                <th>Entrada 2</th>
+                <th>Salida 2</th>
+              </tr>
+            </thead>
+            <tbody id="tablaDias"></tbody>
+          </table>
+        </div>
+
+        <div class="summary">
+          <div>
+            <strong>Horas semanales calculadas</strong>
+            <div style="color:var(--muted);font-size:13px;margin-top:4px;">
+              El horario debe cumplir el mínimo semanal configurado para esta convocatoria.
+            </div>
+          </div>
+          <div class="hours" id="horasSemanales">0.00 h</div>
+        </div>
+
+        <div class="notice">
+          <strong>Antes de descargar:</strong>
+          revisa cuidadosamente los días y horas. Si detectas un error después,
+          simplemente vuelve a generar otro PDF y entrega por el canal indicado únicamente
+          el horario correcto.
+        </div>
+
+        <div class="actions">
+          <button class="btn-primary" type="button" onclick="prepararRevision()">
+            Revisar horario
+          </button>
+        </div>
+
+        <div class="review" id="revision">
+          <h3>Revisa antes de generar el PDF</h3>
+          <div id="resumenRevision"></div>
+
+          <label class="check-row">
+            <input type="checkbox" id="confirmacion">
+            <span>
+              Confirmo que revisé los días y horas mostrados y que este es el horario que deseo generar.
+            </span>
+          </label>
+
+          <div class="security-check">
+            <strong>Verificación de seguridad</strong>
+            <div id="turnstileWidget"></div>
+            <div class="security-help">
+              Esta verificación ayuda a evitar envíos automatizados. No modifica los datos de tu postulación.
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn-light" type="button" onclick="cerrarRevision()">
+              Volver a editar
+            </button>
+
+            <button class="btn-green" id="btnConfirmar" type="button" onclick="confirmarHorario()">
+              Generar y descargar PDF
+            </button>
+          </div>
+        </div>
+
+        <div class="status" id="estado"></div>
+      </div>
+    </section>
+
+    <div class="footer">
+      El PDF que finalmente entregues por el canal indicado será el horario vinculado a tu postulación.
+    </div>
+  </main>
+
+  <section id="pdf-template">
+    <div class="pdf-head">
+      <h2>Horario de disponibilidad para postulación</h2>
+      <div id="pdfProgramLabel">Programa de investigación</div>
+    </div>
+
+    <div class="pdf-meta">
+      <div><strong>Postulante:</strong> <span id="pdfNombre"></span></div>
+      <div><strong>Correo:</strong> <span id="pdfCorreo"></span></div>
+      <div><strong>Fecha de generación:</strong> <span id="pdfFecha"></span></div>
+      <div><strong>Horas semanales:</strong> <span id="pdfHoras"></span></div>
+    </div>
+
+    <div class="pdf-code">
+      <strong>Código de horario:</strong>
+      <span id="pdfCodigo"></span>
+      <br>
+      <span style="color:#667085;">
+        Este código permite vincular el PDF con la postulación enviada.
+      </span>
+    </div>
+
+    <table class="pdf-table">
+      <thead>
+        <tr>
+          <th>Día</th>
+          <th>Entrada 1</th>
+          <th>Salida 1</th>
+          <th>Entrada 2</th>
+          <th>Salida 2</th>
+        </tr>
+      </thead>
+      <tbody id="pdfBody"></tbody>
+    </table>
+
+    <div class="pdf-total">
+      Total semanal:
+      <span id="pdfTotal"></span>
+    </div>
+
+    <div class="pdf-note">
+      Documento generado digitalmente para acompañar el proceso de postulación.
+      Si generas más de un horario, entrega únicamente el PDF que finalmente decidas utilizar.
+    </div>
+  </section>
+
+  <script>
+    const SCHEDULE_CONFIG = Object.assign({
+      apiUrl: "",
+      apiAction: "submit_application_schedule",
+      turnstileSiteKey: "",
+      turnstileAction: "submit_schedule",
+      minimumWeeklyHours: 12,
+      programLabel: "Programa de pasantías de investigación"
+    }, window.SCHEDULE_PORTAL_CONFIG || {});
+
+    const programLabelText = String(
+      SCHEDULE_CONFIG.programLabel || "Programa de pasantías de investigación"
+    ).trim();
+
+    const programLabelEl = document.getElementById("programLabel");
+    const pdfProgramLabelEl = document.getElementById("pdfProgramLabel");
+    if (programLabelEl) programLabelEl.textContent = programLabelText;
+    if (pdfProgramLabelEl) pdfProgramLabelEl.textContent = programLabelText;
+
+    const dias = [
+      "Lunes",
+      "Martes",
+      "Miércoles",
+      "Jueves",
+      "Viernes",
+      "Sábado"
+    ];
+
+    let turnstileToken = "";
+    let turnstileWidgetId = null;
+
+    function onTurnstileLoaded() {
+      if (!window.turnstile || !SCHEDULE_CONFIG.turnstileSiteKey) {
+        const target = document.getElementById("turnstileWidget");
+        if (target) {
+          target.innerHTML = '<div class="security-help">Turnstile no está configurado en esta copia pública. Define turnstileSiteKey en config.js para desplegarla.</div>';
+        }
+        return;
+      }
+      turnstileWidgetId = window.turnstile.render("#turnstileWidget", {
+        sitekey: SCHEDULE_CONFIG.turnstileSiteKey,
+        action: SCHEDULE_CONFIG.turnstileAction,
+        theme: "auto",
+        callback: onTurnstileSuccess,
+        "expired-callback": onTurnstileExpired,
+        "error-callback": onTurnstileError,
+        "refresh-expired": "auto"
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", inicializar);
+
+    function inicializar() {
+      /*
+       * La URL pública es limpia. Si alguien conserva un enlace
+       * antiguo con parámetros, los quitamos sin recargar.
+       */
+      if (window.location.search) {
+        window.history.replaceState(
+          {},
+          document.title,
+          window.location.pathname
+        );
+      }
+
+      document.getElementById("tablaDias").innerHTML =
+        dias.map(dia => {
+          const id = normalizarDiaId(dia);
+          return `
+            <tr>
+              <td class="day">${dia}</td>
+              <td><input type="time" id="${id}_in1" onchange="actualizarHoras()"></td>
+              <td><input type="time" id="${id}_out1" onchange="actualizarHoras()"></td>
+              <td><input type="time" id="${id}_in2" onchange="actualizarHoras()"></td>
+              <td><input type="time" id="${id}_out2" onchange="actualizarHoras()"></td>
+            </tr>
+          `;
+        }).join("");
+    }
+
+    function onTurnstileSuccess(token) {
+      turnstileToken = token || "";
+    }
+
+    function onTurnstileExpired() {
+      turnstileToken = "";
+    }
+
+    function onTurnstileError() {
+      turnstileToken = "";
+    }
+
+    function resetTurnstileSeguro() {
+      turnstileToken = "";
+
+      try {
+        if (
+          window.turnstile &&
+          typeof window.turnstile.reset === "function"
+        ) {
+          window.turnstile.reset(turnstileWidgetId);
+        }
+      } catch (_) {}
+    }
+
+    function normalizarDiaId(dia) {
+      return dia
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase();
+    }
+
+    function obtenerHorario() {
+      const horario = {};
+
+      dias.forEach(dia => {
+        const id = normalizarDiaId(dia);
+
+        horario[dia] = {
+          in1: document.getElementById(`${id}_in1`).value,
+          out1: document.getElementById(`${id}_out1`).value,
+          in2: document.getElementById(`${id}_in2`).value,
+          out2: document.getElementById(`${id}_out2`).value
+        };
+      });
+
+      return horario;
+    }
+
+    function validarTurno(dia, numero, entrada, salida) {
+      if (!entrada && !salida) return null;
+
+      if (!entrada || !salida) {
+        throw new Error(
+          `${dia}: completa entrada y salida del turno ${numero}.`
+        );
+      }
+
+      const inicio = horaAMinutos(entrada);
+      const fin = horaAMinutos(salida);
+
+      if (fin <= inicio) {
+        throw new Error(
+          `${dia}: la salida del turno ${numero} debe ser posterior a la entrada.`
+        );
+      }
+
+      return { inicio, fin };
+    }
+
+    function validarHorario(horario) {
+      let minutos = 0;
+
+      dias.forEach(dia => {
+        const d = horario[dia];
+
+        const t1 = validarTurno(dia, 1, d.in1, d.out1);
+        const t2 = validarTurno(dia, 2, d.in2, d.out2);
+
+        if (t1 && t2 && t2.inicio < t1.fin) {
+          throw new Error(`${dia}: los dos turnos se superponen.`);
+        }
+
+        if (t1) minutos += t1.fin - t1.inicio;
+        if (t2) minutos += t2.fin - t2.inicio;
+      });
+
+      if (minutos <= 0) {
+        throw new Error("Debes registrar al menos un turno completo.");
+      }
+
+      const horas = Math.round((minutos / 60) * 100) / 100;
+
+      if (horas < Number(SCHEDULE_CONFIG.minimumWeeklyHours || 12)) {
+        throw new Error(
+          `El horario debe sumar al menos ${Number(SCHEDULE_CONFIG.minimumWeeklyHours || 12)} horas semanales.`
+        );
+      }
+
+      return horas;
+    }
+
+    function horaAMinutos(hora) {
+      const [h, m] = hora.split(":").map(Number);
+      return h * 60 + m;
+    }
+
+    function actualizarHoras() {
+      const horario = obtenerHorario();
+
+      try {
+        let minutos = 0;
+
+        dias.forEach(dia => {
+          const d = horario[dia];
+
+          [[d.in1, d.out1], [d.in2, d.out2]].forEach(par => {
+            if (par[0] && par[1]) {
+              const ini = horaAMinutos(par[0]);
+              const fin = horaAMinutos(par[1]);
+
+              if (fin > ini) minutos += fin - ini;
+            }
+          });
+        });
+
+        document.getElementById("horasSemanales").textContent =
+          `${(minutos / 60).toFixed(2)} h`;
+      } catch (_) {}
+    }
+
+    function prepararRevision() {
+      limpiarEstado();
+
+      const nombre = document.getElementById("nombre").value.trim();
+      const correo = document.getElementById("correo").value.trim();
+
+      if (!nombre || !correo) {
+        mostrarEstado(
+          "error",
+          "Completa tus datos",
+          "Ingresa tu nombre completo y tu correo antes de revisar el horario."
+        );
+        return;
+      }
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) {
+        mostrarEstado(
+          "error",
+          "Correo no válido",
+          "Revisa el correo electrónico ingresado."
+        );
+        return;
+      }
+
+      const horario = obtenerHorario();
+
+      let horas;
+
+      try {
+        horas = validarHorario(horario);
+      } catch (error) {
+        mostrarEstado(
+          "error",
+          "Revisa el horario",
+          error.message
+        );
+        return;
+      }
+
+      const filas = dias.map(dia => {
+        const d = horario[dia];
+
+        return `
+          <tr>
+            <td class="day">${dia}</td>
+            <td>${d.in1 || "—"}</td>
+            <td>${d.out1 || "—"}</td>
+            <td>${d.in2 || "—"}</td>
+            <td>${d.out2 || "—"}</td>
+          </tr>
+        `;
+      }).join("");
+
+      document.getElementById("resumenRevision").innerHTML = `
+        <p style="color:#607089;">
+          <strong>${nombre}</strong> · ${correo}<br>
+          Horas semanales calculadas: <strong>${horas.toFixed(2)} h</strong>
+        </p>
+
+        <div class="schedule-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Día</th>
+                <th>Entrada 1</th>
+                <th>Salida 1</th>
+                <th>Entrada 2</th>
+                <th>Salida 2</th>
+              </tr>
+            </thead>
+            <tbody>${filas}</tbody>
+          </table>
+        </div>
+      `;
+
+      document.getElementById("confirmacion").checked = false;
+      document.getElementById("revision").classList.add("show");
+      setStep(3);
+      document.getElementById("revision").scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    }
+
+    function cerrarRevision() {
+      document.getElementById("revision").classList.remove("show");
+      setStep(2);
+    }
+
+    async function confirmarHorario() {
+      limpiarEstado();
+
+      if (!document.getElementById("confirmacion").checked) {
+        mostrarEstado(
+          "error",
+          "Falta confirmar",
+          "Marca la casilla de confirmación antes de generar el PDF."
+        );
+        return;
+      }
+
+      const nombre = document.getElementById("nombre").value.trim();
+      const correo = document.getElementById("correo").value.trim();
+      const horario = obtenerHorario();
+
+      let horas;
+
+      try {
+        horas = validarHorario(horario);
+      } catch (error) {
+        mostrarEstado("error", "Revisa el horario", error.message);
+        return;
+      }
+
+      if (!turnstileToken) {
+        mostrarEstado(
+          "error",
+          "Completa la verificación de seguridad",
+          "Espera a que Turnstile termine la verificación antes de generar el PDF."
+        );
+        return;
+      }
+
+      const btn = document.getElementById("btnConfirmar");
+      btn.disabled = true;
+      btn.textContent = "Generando...";
+
+      const requestId = generarRequestId();
+
+      try {
+        const resultado = await llamarServidor({
+          accion: SCHEDULE_CONFIG.apiAction,
+          turnstileToken,
+          requestId,
+          correo,
+          nombre,
+          horarios: horario
+        });
+
+        if (resultado.estado !== "exito") {
+          throw new Error(
+            resultado.mensaje || "No se pudo registrar el horario."
+          );
+        }
+
+        await generarPdf({
+          idHorario: resultado.idHorario,
+          nombre,
+          correo,
+          horas: Number(resultado.horasSemanales ?? horas),
+          horario
+        });
+
+        mostrarEstado(
+          "success",
+          "PDF generado correctamente",
+          `Código ${resultado.idHorario}. Entrega este PDF por el canal de postulación indicado.`
+        );
+
+        document.getElementById("revision").classList.remove("show");
+      } catch (error) {
+        mostrarEstado(
+          "error",
+          "No se pudo generar el PDF",
+          error && error.message
+            ? error.message
+            : "No pudimos registrar el horario en este momento. Inténtalo nuevamente."
+        );
+      } finally {
+        /*
+         * Los tokens Turnstile son de un solo uso.
+         * Reiniciamos el widget tanto si hubo éxito como si hubo error.
+         */
+        resetTurnstileSeguro();
+        btn.disabled = false;
+        btn.textContent = "Generar y descargar PDF";
+      }
+    }
+
+    async function llamarServidor(payload) {
+      if (!SCHEDULE_CONFIG.apiUrl) throw new Error("Falta configurar el endpoint del backend en config.js.");
+      const response = await fetch(SCHEDULE_CONFIG.apiUrl, {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        redirect: "follow"
+      });
+
+      const texto = await response.text();
+
+      try {
+        return JSON.parse(texto);
+      } catch (_) {
+        throw new Error("Respuesta del servidor no válida.");
+      }
+    }
+
+    async function generarPdf(datos) {
+      /*
+       * V4.3 — PDF directo con jsPDF.
+       * Se fijan explícitamente los colores en CADA celda para
+       * evitar que algunos visores/navegadores hereden colores
+       * incorrectos y dejen horas oscuras sobre fondos oscuros.
+       */
+      if (
+        !window.jspdf ||
+        !window.jspdf.jsPDF
+      ) {
+        throw new Error(
+          "No se pudo cargar el generador de PDF. Recarga la página e inténtalo nuevamente."
+        );
+      }
+
+      const { jsPDF } = window.jspdf;
+
+      const doc = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "letter"
+      });
+
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const margin = 16;
+      const contentWidth = pageWidth - margin * 2;
+
+      const NAVY = [20, 67, 107];
+      const NAVY_2 = [28, 82, 132];
+      const TEXT = [29, 41, 57];
+      const MUTED = [99, 115, 139];
+      const BORDER = [210, 222, 234];
+      const ROW_A = [255, 255, 255];
+      const ROW_B = [246, 250, 253];
+      const CODE_BG = [245, 248, 251];
+      const GREEN = [8, 122, 69];
+
+      const nombreSeguro = datos.nombre
+        .replace(/[^\p{L}\p{N}]+/gu, "_")
+        .replace(/^_+|_+$/g, "");
+
+      const fechaGeneracion =
+        new Date().toLocaleString("es-BO", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit"
+        });
+
+      // Encabezado
+      doc.setFillColor(...NAVY);
+      doc.setDrawColor(...NAVY);
+      doc.roundedRect(
+        margin,
+        14,
+        contentWidth,
+        28,
+        3,
+        3,
+        "FD"
+      );
+
+      doc.setTextColor(255, 255, 255);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(16);
+      doc.text(
+        "Horario de disponibilidad para postulación",
+        margin + 7,
+        25
+      );
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(10);
+      doc.text(
+        "Programa de investigación",
+        margin + 7,
+        33
+      );
+
+      // Datos principales
+      let y = 53;
+
+      doc.setFontSize(10);
+
+      doc.setTextColor(...NAVY);
+      doc.setFont("helvetica", "bold");
+      doc.text("Postulante:", margin, y);
+
+      doc.setTextColor(...TEXT);
+      doc.setFont("helvetica", "normal");
+      doc.text(
+        String(datos.nombre || ""),
+        margin + 24,
+        y
+      );
+
+      doc.setTextColor(...NAVY);
+      doc.setFont("helvetica", "bold");
+      doc.text(
+        "Correo:",
+        margin + contentWidth / 2,
+        y
+      );
+
+      doc.setTextColor(...TEXT);
+      doc.setFont("helvetica", "normal");
+      doc.text(
+        String(datos.correo || ""),
+        margin + contentWidth / 2 + 16,
+        y
+      );
+
+      y += 8;
+
+      doc.setTextColor(...NAVY);
+      doc.setFont("helvetica", "bold");
+      doc.text(
+        "Fecha de generación:",
+        margin,
+        y
+      );
+
+      doc.setTextColor(...TEXT);
+      doc.setFont("helvetica", "normal");
+      doc.text(
+        fechaGeneracion,
+        margin + 38,
+        y
+      );
+
+      doc.setTextColor(...NAVY);
+      doc.setFont("helvetica", "bold");
+      doc.text(
+        "Horas semanales:",
+        margin + contentWidth / 2,
+        y
+      );
+
+      doc.setTextColor(...GREEN);
+      doc.setFont("helvetica", "bold");
+      doc.text(
+        `${Number(datos.horas).toFixed(2)} h`,
+        margin + contentWidth / 2 + 33,
+        y
+      );
+
+      // Código del horario
+      y += 12;
+
+      doc.setFillColor(...CODE_BG);
+      doc.setDrawColor(...BORDER);
+      doc.roundedRect(
+        margin,
+        y,
+        contentWidth,
+        18,
+        2,
+        2,
+        "FD"
+      );
+
+      doc.setTextColor(...NAVY);
+      doc.setFont("helvetica", "bold");
+      doc.text(
+        "Código de horario:",
+        margin + 5,
+        y + 7
+      );
+
+      doc.setTextColor(...TEXT);
+      doc.setFont("helvetica", "bold");
+      doc.text(
+        String(datos.idHorario || ""),
+        margin + 38,
+        y + 7
+      );
+
+      doc.setTextColor(...MUTED);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(8.5);
+      doc.text(
+        "Este código permite vincular este PDF con la postulación enviada.",
+        margin + 5,
+        y + 13
+      );
+
+      // Tabla
+      y += 26;
+
+      const encabezados = [
+        "Día",
+        "Entrada 1",
+        "Salida 1",
+        "Entrada 2",
+        "Salida 2"
+      ];
+
+      const colWidths = [
+        37,
+        (contentWidth - 37) / 4,
+        (contentWidth - 37) / 4,
+        (contentWidth - 37) / 4,
+        (contentWidth - 37) / 4
+      ];
+
+      const rowHeight = 10;
+      let x = margin;
+
+      doc.setFontSize(9);
+
+      encabezados.forEach((texto, i) => {
+        // Reaplicar explícitamente en cada celda.
+        doc.setFillColor(...NAVY_2);
+        doc.setDrawColor(...NAVY_2);
+        doc.rect(
+          x,
+          y,
+          colWidths[i],
+          rowHeight,
+          "FD"
+        );
+
+        doc.setTextColor(255, 255, 255);
+        doc.setFont("helvetica", "bold");
+        doc.text(
+          texto,
+          x + colWidths[i] / 2,
+          y + 6.5,
+          {
+            align: "center"
+          }
+        );
+
+        x += colWidths[i];
+      });
+
+      y += rowHeight;
+
+      dias.forEach((dia, filaIndex) => {
+        const d = datos.horario[dia];
+
+        const valores = [
+          dia,
+          d.in1 || "—",
+          d.out1 || "—",
+          d.in2 || "—",
+          d.out2 || "—"
+        ];
+
+        x = margin;
+
+        const fondo =
+          filaIndex % 2 === 0
+            ? ROW_A
+            : ROW_B;
+
+        valores.forEach((texto, i) => {
+          // Fondo claro garantizado en cada celda.
+          doc.setFillColor(...fondo);
+          doc.setDrawColor(...BORDER);
+          doc.rect(
+            x,
+            y,
+            colWidths[i],
+            rowHeight,
+            "FD"
+          );
+
+          if (i === 0) {
+            doc.setTextColor(...NAVY);
+            doc.setFont("helvetica", "bold");
+            doc.text(
+              texto,
+              x + 3,
+              y + 6.5
+            );
+          } else {
+            doc.setTextColor(...TEXT);
+            doc.setFont("helvetica", "normal");
+            doc.text(
+              texto,
+              x + colWidths[i] / 2,
+              y + 6.5,
+              {
+                align: "center"
+              }
+            );
+          }
+
+          x += colWidths[i];
+        });
+
+        y += rowHeight;
+      });
+
+      // Total semanal
+      y += 10;
+
+      doc.setTextColor(...NAVY);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(11);
+      doc.text(
+        "Total semanal:",
+        pageWidth - margin - 42,
+        y
+      );
+
+      doc.setTextColor(...GREEN);
+      doc.text(
+        `${Number(datos.horas).toFixed(2)} h`,
+        pageWidth - margin,
+        y,
+        {
+          align: "right"
+        }
+      );
+
+      // Nota final
+      y += 15;
+
+      doc.setDrawColor(...BORDER);
+      doc.line(
+        margin,
+        y,
+        pageWidth - margin,
+        y
+      );
+
+      y += 7;
+
+      doc.setTextColor(...MUTED);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(8.5);
+
+      const nota =
+        "Documento generado digitalmente para acompañar el proceso de postulación. " +
+        "Si generas más de un horario, sube únicamente el PDF que finalmente decidas utilizar.";
+
+      const lineasNota =
+        doc.splitTextToSize(
+          nota,
+          contentWidth
+        );
+
+      doc.text(
+        lineasNota,
+        margin,
+        y
+      );
+
+      doc.save(
+        `Horario_Postulacion_${datos.idHorario}_${nombreSeguro}.pdf`
+      );
+    }
+
+
+    function generarRequestId() {
+      if (
+        window.crypto &&
+        typeof window.crypto.randomUUID === "function"
+      ) {
+        return window.crypto.randomUUID();
+      }
+
+      return (
+        Date.now().toString(36) +
+        "-" +
+        Math.random().toString(36).slice(2)
+      );
+    }
+
+    function mostrarEstado(tipo, titulo, mensaje) {
+      const el = document.getElementById("estado");
+      el.className = `status show ${tipo}`;
+      el.innerHTML = `<strong>${titulo}</strong><br>${mensaje}`;
+      el.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    }
+
+    function limpiarEstado() {
+      const el = document.getElementById("estado");
+      el.className = "status";
+      el.innerHTML = "";
+    }
+
+    function setStep(numero) {
+      [1, 2, 3].forEach(n => {
+        document.getElementById(`step${n}`).classList.toggle(
+          "active",
+          n === numero
+        );
+      });
+    }
+  </script>
+</body>
+</html>
+
+
+
+

@@ -1,0 +1,16 @@
+# Local deployment files
+.clasp.json
+.DS_Store
+Thumbs.db
+*.log
+.env
+.env.*
+
+# Local/private configuration variants
+**/config.local.js
+**/config.production.js
+
+# Temporary exports and backups
+*.bak
+*.tmp
+~$*.xlsx
