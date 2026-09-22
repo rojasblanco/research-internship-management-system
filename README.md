@@ -121,6 +121,8 @@ This project demonstrates the full path from:
 
 It combines process analysis, data architecture, automation, exception handling, integration design, and preparation of a reusable public implementation.
 
+**The system was designed and developed by the repository author, with assistance from AI tools during parts of the development process.** These tools supported tasks such as drafting and reviewing code, debugging, comparing implementation options, and documentation. Decisions about the problem, workflow, architecture, operational rules, validation, and publication were made by the author.
+
 The public version is distributed under the **MIT License**. In the published repository, the `LICENSE` file contains the applicable legal text. The license covers only material published here and does not license private organizational data, infrastructure, trademarks, internal documents, or other non-public assets.
 
 ## Documentation

@@ -123,6 +123,8 @@ El proyecto documenta el recorrido completo de:
 
 Además del desarrollo técnico, refleja análisis de procesos, separación de responsabilidades, diseño de controles, manejo de excepciones, integración entre fuentes y preparación de una arquitectura reutilizable.
 
+**El sistema fue diseñado y desarrollado por el autor del repositorio, con apoyo de herramientas de inteligencia artificial durante distintas partes del proceso de desarrollo.** Estas herramientas se utilizaron como asistencia para tareas como redacción y revisión de código, depuración, comparación de alternativas y documentación. Las decisiones sobre el problema, el flujo, la arquitectura, las reglas operativas, la validación y la publicación fueron tomadas por el autor.
+
 La versión pública se distribuye bajo la **Licencia MIT**. En el repositorio publicado, el archivo `LICENSE` contiene el texto legal aplicable. La licencia cubre únicamente el material publicado aquí; no licencia datos privados, infraestructura, marcas, documentos internos ni otros activos no incluidos.
 
 ## Documentación

@@ -1,15 +1,21 @@
 # Changelog
 
-## Unreleased — public reference release
+All notable **public** changes to this repository will be documented here.
+
+This changelog begins with the first public portfolio release and does not attempt to reconstruct the private development history that preceded publication on GitHub.
+
+## 1.0.0 — Initial public portfolio release
+
+Included capabilities and public-release scope:
 
 - Sanitized and generalized architecture for internship/new-member management.
 - Provider-neutral intake model and three onboarding routes.
 - Host-integrable authenticated management portal design.
 - Separate schedule/PDF submission page.
 - Automatic intermediate-period consolidation and periodic-reporting architecture.
-- Human-review boundary for exceptions/final closure.
+- Human-review boundary for exceptions and final closure.
 - Report registry/API/UI contract and acceptance-test coverage.
 - Equivalent fictitious Spanish and English example workbooks.
 - Security, provenance, maintenance, deployment, and AI/developer context documentation.
 
-The sanitized Apps Script core and management interface are included in this candidate. Browser-connected deployment behavior must still be validated in the host platform using `docs/POST_DEPLOYMENT_VALIDATION.es.md` before the implementation is considered operationally complete.
+Host-platform integration should be validated in the target environment before operational use.
